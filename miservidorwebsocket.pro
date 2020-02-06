@@ -36,8 +36,8 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-    ../../QT/miservidorwebsocket/json.hpp \
-    productos.h
+        json.hpp
+        productos.h
 
 FORMS += \
         mainwindow.ui
