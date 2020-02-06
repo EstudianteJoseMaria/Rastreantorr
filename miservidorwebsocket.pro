@@ -36,7 +36,8 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-        json.hpp
+        json.hpp \
+    productos.h
         productos.h
 
 FORMS += \
