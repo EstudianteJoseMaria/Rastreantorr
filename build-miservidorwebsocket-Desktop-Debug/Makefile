@@ -235,7 +235,8 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/features/yacc.prf \
 		/usr/lib64/qt5/mkspecs/features/lex.prf \
 		../../miservidorwebsocket.pro ../mainwindow.h \
-		../json.hpp ../main.cpp \
+		../json.hpp \
+		../productos.h ../main.cpp \
 		../mainwindow.cpp \
 		../productos.cpp
 QMAKE_TARGET  = miservidorwebsocket
@@ -629,7 +630,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib64/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mainwindow.h ../json.hpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../mainwindow.h ../json.hpp ../productos.h $(DISTDIR)/
 	$(COPY_FILE) --parents ../main.cpp ../mainwindow.cpp ../productos.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mainwindow.ui $(DISTDIR)/
 	$(COPY_FILE) --parents myapp_es_ES.ts myapp_ca_ES.ts myapp_en_US.ts $(DISTDIR)/

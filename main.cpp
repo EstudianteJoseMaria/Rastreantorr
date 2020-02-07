@@ -111,7 +111,7 @@ int main(int, char *[])
                                     {"product", js["name"]},
                                     {"web", js["web"]},
                                 };
-                                if (mensaje["action"] == "productos") mensaje = producto.revisar(conectado, mensaje); //Hacer esto
+                                mensaje = producto.revisar(conectado, mensaje); //Hacer esto
 
                                 std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
                                 webSocket->send(mensajeEnviar);
