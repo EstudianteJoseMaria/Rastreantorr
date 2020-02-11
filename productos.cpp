@@ -121,8 +121,9 @@ JSON Productos::revisar(bool ok, JSON mensaje) ///Aqui estarian las comprobacion
                 mensaje["busqueda"]["tiempo"].push_back(tiempo.toStdString());
                 mensaje["busqueda"]["recurso"].push_back(recurso.toStdString());
         }
+
         mensaje["action"] = "select";
-        ///Hay que hacer comprobacion de errores
+                                                    //Hay que hacer comprobacion de errores
         qDebug() << "Select " << query.lastError().text();
         //qDebug() << QString::fromStdString(mensaje.dump());
 
