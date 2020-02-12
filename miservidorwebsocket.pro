@@ -32,12 +32,14 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    productos.cpp
+    productos.cpp \
+    usuarios.cpp
 
 HEADERS += \
         mainwindow.h \
         json.hpp \
-    productos.h
+    productos.h \
+    usuarios.h
         productos.h
 
 FORMS += \

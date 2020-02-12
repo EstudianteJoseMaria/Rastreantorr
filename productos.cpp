@@ -14,7 +14,7 @@
  * @param ok Booleano que confirmará si se ha conectado a la base de datos
  * @return
  */
-JSON Productos::agregar(bool ok, JSON mensaje)
+JSON Productos::insertar(bool ok, JSON mensaje)
 {
     if (ok)
     {
@@ -86,7 +86,6 @@ JSON Productos::cancelar(bool ok, JSON mensaje)
 
         QSqlQuery query;
         query.prepare("DELETE FROM productos WHERE nombre_producto = :nombreQuery");
-        qDebug() << select.value("nombre_producto").toString();
         query.bindValue(":nombreQuery", select.value("nombre_producto").toString());
         query.exec();
         qDebug() << "Cancelar " << query.lastError().text();

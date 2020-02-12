@@ -17,7 +17,7 @@ public:
     std::string m_nombreProducto {""};
     QString m_fechaRegistro;
     int estado;
-    JSON agregar(bool conex, JSON mensaje);
+    JSON insertar(bool conex, JSON mensaje);
     JSON modificar(bool conex, JSON mensaje);
     JSON cancelar(bool conex, JSON mensaje);
     JSON revisar(bool conex, JSON mensaje);

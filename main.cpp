@@ -8,7 +8,7 @@
 #include "ixwebsocket/IXWebSocket.h"
 #include "ixwebsocket/IXConnectionState.h"
 
-#include "usuario.h"
+#include "usuarios.h"
 #include "productos.h"
 
 #include "json.hpp"
@@ -102,9 +102,13 @@ int main(int, char *[])
                             ///RESPUESTA
                             //Usuario usuario;       //Segun lo que envie la pagina web (mensaje.action) hacer cosas sobre productos o sobre usuarios
                             Productos producto;
-                            if (js["login"] == "log")
+                            usuarios usuario;
+                            if (js["action"] == "login")
                             {
-
+                                JSON mensaje = {
+                                    {"correo", "hola"}
+                                };
+                                usuario.revisar(conectado, js);
                             }
                             else if (js["action"] == "estado")       //Comprobar producto
                             {
@@ -128,7 +132,7 @@ int main(int, char *[])
                                     {"product", js["name"]},
                                     {"web", js["web"]},
                                 };
-                                mensaje = producto.agregar(conectado, mensaje);
+                                mensaje = producto.insertar(conectado, mensaje);
 
                                 std::string mensajeEnviar = mensaje.dump();
                                 webSocket->send(mensajeEnviar);
