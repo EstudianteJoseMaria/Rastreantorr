@@ -6,6 +6,8 @@
 #include <QDebug>
 #include <list>
 
+//TRUNCATE TABLE nombre_de_la_tabla RESTART IDENTITY;
+
 /*! \file */
 
 /**

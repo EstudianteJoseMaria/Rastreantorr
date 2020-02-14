@@ -102,12 +102,12 @@ int main(int, char *[])
                             ///RESPUESTA
                             //Usuario usuario;       //Segun lo que envie la pagina web (mensaje.action) hacer cosas sobre productos o sobre usuarios
                             Productos producto;
-                            usuarios usuario;
+                            usuarios usuario("", "", "");
                             if (js["action"] == "login")
                             {
-                                JSON mensaje = {
+                                /*JSON mensaje = {
                                     {"correo", "hola"}
-                                };
+                                };*/
                                 usuario.revisar(conectado, js);
                             }
                             else if (js["action"] == "estado")       //Comprobar producto

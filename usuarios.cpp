@@ -6,11 +6,11 @@
 #include <QDebug>
 #include <list>
 
-usuarios::usuarios()
+usuarios::usuarios(QString nombre, QString correo, QString contra)
 {
-    /*this->nombre = nombre;
-    this->mail = mail;
-    this->contra = contra;*/
+    this->nombre = nombre;
+    this->correo = correo;
+    this->contra = contra;
 }
 
 JSON usuarios::insertar(bool ok, JSON mensaje)
@@ -53,64 +53,51 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
 {
     if(ok)
     {
-        usuarios usuario();//"", "", ""
+        bool login = false;
+        usuarios usuario("", "", "");
         qDebug() << QString::fromStdString(mensaje["correo"]);
         QSqlQuery query;
-        query.prepare("SELECT correo FROM usuarios where correo = :correo;"); //(contrasena = crypt(:contrasena, contrasena))
+        query.prepare("SELECT correo, contrasena FROM usuarios where correo = :correo;"); //(contrasena = crypt(:contrasena, contrasena))
 
         query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
         query.exec();
         qDebug() << "Select Hecha";
+
         while (query.next())
         {
-            if (query.value("correo") == QString::fromStdString(mensaje["correo"]))
+            if (query.value("contrasena") == QString::fromStdString(mensaje["contrasena"]))
             {
-                qDebug() << "Existe en la bbdd";    //Ahora existe el usuario, ahora hay que comprobar su contraseña aqui dentro
+                    login = true;
+                    qDebug() << login;
             }
             //endif
         }
-        if (!query.next())
+
+        if(login)
         {
-            qDebug() << "No existe en la bbdd";
-        }
-
-        //query;
-        query.prepare("SELECT contrasena FROM usuarios where correo = :correo;"); //(contrasena = crypt(:contrasena, contrasena))
-
-        query.bindValue(":contrasena", QString::fromStdString(mensaje["contra"]));
-        query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
-        query.exec();
-
-        bool passCorrect = false;
-        QSqlRecord rec = query.record();
-        while (query.next())
-        {
-            passCorrect = QVariant(query.value("contrasena")).toBool();
-        }
-
-        if(passCorrect)
-        {
-
-            query.prepare("SELECT * from usuarios where correo = :correo");
-            //query.bindValue(":email", eml);
+            query.prepare("SELECT * FROM usuarios WHERE correo = :correo AND contrasena = :contra");
+            query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
+            query.bindValue("contra", QString::fromStdString(mensaje["contrasena"]));
             query.exec();
 
-            QSqlRecord rec = query.record();
-            while (query.next())
+            //QSqlRecord rec = query.record();
+            while (query.next())        //Esto aun no funciona
             {
-                QString nombre = query.value("nombre").toString();
-                QString pass = query.value("password").toString();
-                QString email = query.value("email").toString();
+                qDebug() << query.value("nombre_usuario").toString();
+                QString nombre = query.value("nombre_usuario").toString();
+                QString correo = query.value("correo").toString();
+                QString contra = query.value("contrasena").toString();
 
-                usuarios user();//nombre.toUtf8().constData(), pass.toUtf8().constData(), email.toUtf8().constData()
-                //user.id = query.value("idusuario").toInt();
-                return mensaje;//user;
+                usuarios user(nombre, correo, contra);
+                this->id = query.value("id_usuario").toInt();
+                qDebug() << user.contra;
+                return mensaje;
             }
 
         } // end if
 
 
-        return mensaje; //usuario
+        return mensaje;
     }
     else
     {

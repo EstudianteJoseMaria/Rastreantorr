@@ -4,6 +4,7 @@
 <head>
 <title>websockets</title>
 <meta charset="utf8" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="css/indice.css" type="text/css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <!-- Temas-->
 <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">-->
@@ -13,15 +14,20 @@ var socket = new WebSocket("wss://localhost:9990");
 
 function botonEntrar()
 {
+    var json = {id: "1", action: "login", mail: document.getElementById("correo").value, pass: document.getElementById("contra").value};
+    socket.send(JSON.stringify(json));
     document.getElementById("divlogin").style.display="none";
     document.getElementById("divIni").style.display="block";
 }
 
 function volverInicio()
 {
-    document.getElementById("divIni").style.visibility="visible";
-    document.getElementById("busqueda").style.visibility="hidden";
-    document.getElementById("retroceso").style.visibility="hidden";
+    document.getElementById("divIni").style.display="block";
+    document.getElementById("estiloBusqueda").style.visibility="hidden";
+    document.getElementById("retroceso").style.display="none";
+    while (document.getElementById("busqueda").hasChildNodes()) {
+        document.getElementById("busqueda").removeChild(document.getElementById("busqueda").firstChild);
+    }
 }
 
 function cancelarProducto() //Funcion para cancelar una busqueda
@@ -34,9 +40,9 @@ function revisarProducto() //Funcion para pedir si existe el producto
 {
     var json = {id: "2", action: "estado", name:  document.getElementById("comprobar").value};
     socket.send(JSON.stringify(json));
-    document.getElementById("divIni").style.visibility="hidden";
-    document.getElementById("busqueda").style.visibility="visible";
-    document.getElementById("retroceso").style.visibility="visible";
+    document.getElementById("divIni").style.display="none";
+    document.getElementById("busqueda").style.display="block";
+    document.getElementById("retroceso").style.display="block";
 }
 
 function agregarProducto() //Funcion para agregar un producto a la lista de productos
@@ -80,37 +86,45 @@ socket.onmessage = function(event) {
   }
   else if (mensaje.action == "select")
   {
+  for(var i = 0; i < Object.keys(mensaje.busqueda).length; i++)
+  {
+    console.log(mensaje.busqueda)
+  }
     alert("Ahora mismo hay estos procesos en búsqueda: ");
-    var espaciado = document.createElement("br");
-    for(var i = 0; i < Object.keys(mensaje.busqueda).length; i++) {       //Cada elemento se coloca en un div distinto
+    var espaciado = document.createTextNode("           ");
+    for(var i = 0; i < Object.keys(mensaje.busqueda.nombre).length; i++) {       //Cada elemento se coloca en un div distinto
 
         var div = document.createElement("div");
+        div.id="estiloBusqueda";
         var nombres = document.createElement("nombre");
-        var nombre = document.createTextNode(mensaje.busqueda.nombre[i]);
+        nombres.style.display= "block";
+        var nombre = document.createTextNode("Nombre: " + mensaje.busqueda.nombre[i]);
 
         nombres.appendChild(nombre);
-        var estados = document.createElement("estados");
-        var estado = document.createTextNode(mensaje.busqueda.estado[i]);
 
+        var estados = document.createElement("estado");
+        estados.style.display= "block";
+        var estado = document.createTextNode("Estado: " + mensaje.busqueda.estado[i]);
         estados.appendChild(estado);
+
         var tiempos = document.createElement("tiempo");
-        var tiempo = document.createTextNode(mensaje.busqueda.tiempo[i]);
-
+        tiempos.style.display= "block";
+        var tiempo = document.createTextNode("Tiempo transcurrido: " + mensaje.busqueda.tiempo[i]);
         tiempos.appendChild(tiempo);
-        var recursos = document.createElement("recursos");
-        var recurso = document.createTextNode(mensaje.busqueda.recurso[i]);
 
-        recursos.appendChild(recurso);
+        var direcciones = document.createElement("direccion");
+        direcciones.style.display= "block";
+        var direccion = document.createTextNode("Dirección de búsqueda: " + mensaje.busqueda.recurso[i]);
+        direcciones.appendChild(direccion);
 
-        /*div.appendChild(nombres);
+        console.log(document.getElementById("busqueda").appendChild(div));
+
+        div.appendChild(nombres);
         div.appendChild(estados);
         div.appendChild(tiempos);
-        div.appendChild(recursos);*/
+        div.appendChild(direcciones);
 
-        document.getElementById("nombre").appendChild(nombres);
-        document.getElementById("estado").appendChild(estados);
-        document.getElementById("tiempo").appendChild(tiempos);
-        document.getElementById("direccion").appendChild(recursos);
+        document.getElementById("busqueda").appendChild(div);
     }
 
   };
@@ -134,42 +148,43 @@ socket.onerror = function(error) {
 <body style="background-color:white"> <!-- http://www.gitmedio.com/gitmedio/codigo-en-php-y-mysql-sistema-de-autenticacion/ -->
 
 <!--Pagina de login -->
-    <div id="divlogin" style="width: 400px; margin: 50px auto; background-color: #F3EDED; border: 1px solid #ECE8E8; height: 400px; border-radius:8px; padding: 0px 9px 0px 9px;">
+    <div id="divlogin">
         <div class="ContentForm">
             <!--<form action="" method="get" name="FormEntrar"> -->
                     <div style="margin: 40px 0px 0px -28%">
-                      <input type="email" name="correo" placeholder="Correo" id="Correo" style="text-align: center; margin: 50px 0px 0px 32%; font-size: 14px height: 300px;" size="30" required>
+                      <input type="email" name="correo" placeholder="example@example.com" id="correo" size="30" required>
                     </div>
                     <div style="margin: 10px 0px 0px -28%">
-                      <input type="password" name="contra" placeholder="******" style="text-align: center; margin: 20px 0px 0px 32%; font-size: 14px;" size="30" required>
+                      <input type="password" name="contra" placeholder="******" id="contra" size="30" required>
                     </div>
                     <br>
-                    <button id="IngresoLog" type="" onclick="botonEntrar()">Entrar</button>
+                    <button id="login" type="" onclick="botonEntrar()">Entrar</button>
                     <div class="opcioncontra"><a href="">Olvidaste tu contraseña?</a></div>
             <!--</form>-->
         </div>
     </div>
-
-<input type=image src="flecha.png" id="retroceso" width="50" height="50" style="position:absolute; visibility:hidden" onclick="volverInicio()"/>
-    <div style = "padding: 100px 0px 0px 50px; display: none;" id="divIni"> <!-- Pagina del cliente -->
+<!--Fin login -->
+<input type=image src="flecha.png" id="retroceso" width="50" height="50" onclick="volverInicio()"/>
+    <div id="divIni"> <!-- Pagina del cliente -->
     <h1>Funciones disponibles:</h1>
-        <div style="border: 2px solid #ccc;width: 365px; height:150px; margin-bottom: 20px; margin-left:8%; padding: 2% 0% 0% 1%; float:left;">
-            1. Introduce el nombre del producto que quieras empezar a buscar: <br style="margin-bottom:30px">
+        <div class="divsConsulta">
+            1. Introduce el nombre del producto que quieras empezar a buscar: <br style="margin-bottom:10px">
             <input type="textfield" id="agregar" placeholder="Introduce el nombre del producto"/>
             <input type="button" value="Nuevo producto" onclick="agregarProducto()"/>
         </div>
-        <div style="border: 2px solid #ccc;width: 370px; height:150px; margin-bottom: 20px; margin-left:8%; padding: 2% 0% 0% 1%; float:left;">
+        <div class="divsConsulta">
             2. Introduce el producto a cancelar: <br style="margin-bottom:30px">
             <input type="textfield" id="cancelar" placeholder="Introduce el nombre del producto"/>
             <input type="button" value="Cancelar producto" onclick="confirmacionDelete()"/>
         </div>
-        <div style="border: 2px solid #ccc;width: 400px; height:150px; margin: 0px 0px 20px 8%; padding: 2% 0% 0% 1%; float:left;">
+        <div class="divsConsulta">
             3. Introduce el nombre del producto que quieres revisar: <br style="margin-bottom:30px">
             <input type="textfield" id="comprobar" placeholder="Introduce el nombre del producto"/>
             <input type="button" value="Comprobar producto" onclick="revisarProducto()"/>
         </div>
     </div>
-    <div id="busqueda" style="border: 2px solid #ccc; width: 600px; height:150px; margin: 0px 0px 0%  30%;padding: 20px 0px 0px 50px; position:absolute; top:35%; visibility:hidden"><nombre id="nombre">Nombre: </nombre><br><estado id="estado">Estado: </estado><br> <tiempo id="tiempo">Tiempo transcurrido:</tiempo> <br> <direccion id="direccion">Dirección de búsqueda: </direccion>
+    <div id="busqueda">
+    <!--Aqui van los elementos de la busqueda-->
     </div>
 </body>
 </html>

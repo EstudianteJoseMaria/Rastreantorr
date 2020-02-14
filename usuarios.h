@@ -10,7 +10,7 @@ using JSON = nlohmann::json;
 class usuarios
 {
 public:
-    usuarios();//std::string nombre, std::string mail, std::string contra
+    usuarios(QString nombre, QString correo, QString contra);
 
     JSON insertar(bool conex, JSON mensaje);
     JSON modificar(bool conex, JSON mensaje);
@@ -19,9 +19,9 @@ public:
 
 private:
     int id;
-    std::string nombre;
-    std::string mail;
-    std::string contra;
+    QString nombre;
+    QString correo;
+    QString contra;
 };
 
 #endif // USUARIOS_H
