@@ -105,10 +105,18 @@ int main(int, char *[])
                             usuarios usuario("", "", "");
                             if (js["action"] == "login")
                             {
-                                /*JSON mensaje = {
-                                    {"correo", "hola"}
-                                };*/
-                                usuario.revisar(conectado, js);
+                                JSON mensaje = usuario.revisar(conectado, js);
+                                std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
+                                webSocket->send(mensajeEnviar);
+                            }
+                            else if (js["action"] == "register")
+                            {
+                                JSON mensaje = usuario.insertar(conectado, js);
+                                if(mensaje != "")
+                                {
+                                    std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
+                                    webSocket->send(mensajeEnviar);
+                                }
                             }
                             else if (js["action"] == "estado")       //Comprobar producto
                             {

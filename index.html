@@ -12,11 +12,31 @@
 
 var socket = new WebSocket("wss://localhost:9990");
 
+function mostrarIni()
+{
+    document.getElementById("divlogin").style.display="block";
+    document.getElementById("divreg").style.display="none";
+}
+
+function mostrarReg()
+{
+    document.getElementById("divlogin").style.display="none";
+    document.getElementById("divreg").style.display="block";
+}
+
 function botonEntrar()
 {
-    var json = {id: "1", action: "login", mail: document.getElementById("correo").value, pass: document.getElementById("contra").value};
+    var json = {id: "1", action: "login", correo: document.getElementById("correo").value, contrasena: document.getElementById("contra").value};
     socket.send(JSON.stringify(json));
     document.getElementById("divlogin").style.display="none";
+    document.getElementById("divIni").style.display="block";
+}
+
+function botonRegistro()
+{
+    var json = {action: "register", usuario: document.getElementById("usuarioreg").value, correo: document.getElementById("correoreg").value, contra: document.getElementById("contrareg").value};
+    socket.send(JSON.stringify(json));
+    document.getElementById("divreg").style.display="none";
     document.getElementById("divIni").style.display="block";
 }
 
@@ -25,7 +45,8 @@ function volverInicio()
     document.getElementById("divIni").style.display="block";
     document.getElementById("estiloBusqueda").style.visibility="hidden";
     document.getElementById("retroceso").style.display="none";
-    while (document.getElementById("busqueda").hasChildNodes()) {
+    while (document.getElementById("busqueda").hasChildNodes())
+    {
         document.getElementById("busqueda").removeChild(document.getElementById("busqueda").firstChild);
     }
 }
@@ -75,6 +96,10 @@ socket.onmessage = function(event) {
   {
     alert("Hay mas de una fila por borrar");
     confirm("Seguro que quieres borrar?");
+  }
+  else if (mensaje.action == "id")
+  {
+    document.getElementById("user").appendChild(document.createTextNode(mensaje.nombre_usuario));
   }
   else if (mensaje.action == "insert")
   {
@@ -151,20 +176,41 @@ socket.onerror = function(error) {
     <div id="divlogin">
         <div class="ContentForm">
             <!--<form action="" method="get" name="FormEntrar"> -->
-                    <div style="margin: 40px 0px 0px -28%">
-                      <input type="email" name="correo" placeholder="example@example.com" id="correo" size="30" required>
-                    </div>
-                    <div style="margin: 10px 0px 0px -28%">
-                      <input type="password" name="contra" placeholder="******" id="contra" size="30" required>
-                    </div>
-                    <br>
-                    <button id="login" type="" onclick="botonEntrar()">Entrar</button>
-                    <div class="opcioncontra"><a href="">Olvidaste tu contraseña?</a></div>
+              <div style="margin: 40px 0px 0px -28%">
+                <input type="email" class="correo" id="correo" name="correo" placeholder="example@example.com" size="30" required>
+              </div>
+              <div style="margin: 10px 0px 0px -28%">
+                <input type="password" class="contra" id="contra" name="contra" placeholder="******" size="30" required>
+              </div>
+              <br>
+              <button id="login" type="" onclick="botonEntrar()">Entrar </button> ¿No estas registrado? <a onclick="mostrarReg()">   Registrarse</a>
+              <div class="opcioncontra"><a>Olvidaste tu contraseña?</a></div>
             <!--</form>-->
         </div>
     </div>
 <!--Fin login -->
+<!--Pagina de registro -->
+    <div id="divreg" style="display:none">
+        <div class="ContentForm">
+           <div style="margin: 40px 0px 0px -28%">
+               <input type="text" id="usuarioreg" name="correo" placeholder="usuario" size="30" required>
+           </div>
+           <div style="margin: 10px 0px 0px -28%">
+             <input type="email" class="correo" id="correoreg" name="correo" placeholder="example@example.com" size="30" required>
+           </div>
+           <div style="margin: 10px 0px 0px -28%">
+             <input type="password" class="contra" id="contrareg" name="contra" placeholder="******" size="30" required>
+           </div>
+           <br>
+           <button id="registro" type="" onclick="botonRegistro()">Registrarse</button>
+           <div class="opcioncontra" style="float:right;"><a onclick="mostrarIni()">Ya tengo una cuenta</a></div>
+        </div>
+    </div>
+<!--Fin registro-->
 <input type=image src="flecha.png" id="retroceso" width="50" height="50" onclick="volverInicio()"/>
+<div style="float:right; margin: 10px 40px 0px 0px;">Usuario:
+    <user id="user"></user><br>
+</div>
     <div id="divIni"> <!-- Pagina del cliente -->
     <h1>Funciones disponibles:</h1>
         <div class="divsConsulta">

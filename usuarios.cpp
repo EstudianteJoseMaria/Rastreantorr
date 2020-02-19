@@ -15,94 +15,99 @@ usuarios::usuarios(QString nombre, QString correo, QString contra)
 
 JSON usuarios::insertar(bool ok, JSON mensaje)
 {
-    if(ok)
+    if (ok)
     {
+        JSON mensajeEnviar;
         QSqlQuery query;
         query.prepare("INSERT INTO usuarios (nombre_usuario, contrasena, correo) VALUES (:nombre_usuario, :contrasena, :correo);"); //crypt(:pass, gen_salt('bf'))
         //PGP_SYM_ENCRYPT('1234','AES_KEY')
-        query.bindValue(":nombre_usuario", QString::fromStdString(mensaje["nombre_user"]));//m_nombre
-        query.bindValue(":contrasena", QString::fromStdString(mensaje["contra"]));//m_contra
+        query.bindValue(":nombre_usuario", QString::fromStdString(mensaje["usuario"]));//m_nombre
         query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));//m_email
+        query.bindValue(":contrasena", QString::fromStdString(mensaje["contra"]));//m_contra
         query.exec();
 
         QString error = query.lastError().text();
 
-        if(error == " ")
-        {
-            query.prepare("SELECT * FROM usuarios ORDER BY id_usuario DESC LIMIT 1;");
-            query.exec();
+        if (error == " ")
+        { 
             QSqlRecord rec = query.record();
-            while (query.next())
-            {
-                int id = query.value("id_usuario").toInt();
-                this->id = id;
-            }
+
+            int id = query.lastInsertId().toInt();
+            this->id = id;
+
+            mensajeEnviar["action"] = id;
+            return mensajeEnviar;
         }else
         {
             qDebug() << error;
+            return "";
         }
+
     }
     else
     {
         qDebug("No estas conectado con la base de datos"); /// Falta JSON de error
+        return "";
     }
-
 }
 
 JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string password
 {
-    if(ok)
+    JSON mensajeDevuelto;
+    if (ok)
     {
         bool login = false;
         usuarios usuario("", "", "");
-        qDebug() << QString::fromStdString(mensaje["correo"]);
         QSqlQuery query;
-        query.prepare("SELECT correo, contrasena FROM usuarios where correo = :correo;"); //(contrasena = crypt(:contrasena, contrasena))
+        query.prepare("SELECT correo, contrasena FROM usuarios where correo = :correo"); //(contrasena = crypt(:contrasena, contrasena))
 
         query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
         query.exec();
-        qDebug() << "Select Hecha";
 
         while (query.next())
         {
             if (query.value("contrasena") == QString::fromStdString(mensaje["contrasena"]))
             {
-                    login = true;
-                    qDebug() << login;
+                login = true;
+            } //endif
+            else
+            {
+                mensajeDevuelto["error"] = "Contraseña incorrecta";
             }
-            //endif
         }
 
-        if(login)
+        if  (login)
         {
             query.prepare("SELECT * FROM usuarios WHERE correo = :correo AND contrasena = :contra");
             query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
-            query.bindValue("contra", QString::fromStdString(mensaje["contrasena"]));
+            query.bindValue(":contra", QString::fromStdString(mensaje["contrasena"]));
             query.exec();
 
             //QSqlRecord rec = query.record();
-            while (query.next())        //Esto aun no funciona
+            while (query.next())
             {
-                qDebug() << query.value("nombre_usuario").toString();
-                QString nombre = query.value("nombre_usuario").toString();
+                mensajeDevuelto["action"] = "id";
+                /*QString nombre = query.value("nombre_usuario").toString();
                 QString correo = query.value("correo").toString();
                 QString contra = query.value("contrasena").toString();
+                usuarios user(nombre, correo, contra);*/
 
-                usuarios user(nombre, correo, contra);
                 this->id = query.value("id_usuario").toInt();
-                qDebug() << user.contra;
-                return mensaje;
+                mensajeDevuelto["nombre_usuario"] = query.value("nombre_usuario").toString().toStdString();
+                return mensajeDevuelto;
             }
+        }
+        else
+        {
 
+            mensajeDevuelto = "";
+            return mensajeDevuelto;
         } // end if
-
-
-        return mensaje;
     }
     else
     {
-        mensaje["errorType"]="Fallo con el servidor";
-        return mensaje;
+        mensajeDevuelto["error"]="Fallo con el servidor";
+        return mensajeDevuelto;
     }
 
 
