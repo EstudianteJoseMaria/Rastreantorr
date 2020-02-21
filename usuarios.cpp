@@ -110,7 +110,6 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
         return mensajeDevuelto;
     }
 
-
 }
 /*
 void usuarios::remove(int id)
