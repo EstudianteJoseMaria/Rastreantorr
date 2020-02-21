@@ -40,8 +40,7 @@ HEADERS += \
     usuarios.h
         productos.h
 
-FORMS += \
-        mainwindow.ui
+FORMS +=
 
 
 LIBS += -pthread -lz -lssl -lcrypto
