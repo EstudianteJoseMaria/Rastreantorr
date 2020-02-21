@@ -6,6 +6,12 @@
 #include <QDebug>
 #include <list>
 
+/*! \file */
+
+/**
+ * @brief Constructor de usuarios
+ * @return
+ */
 usuarios::usuarios(QString nombre, QString correo, QString contra)
 {
     this->nombre = nombre;
@@ -13,6 +19,14 @@ usuarios::usuarios(QString nombre, QString correo, QString contra)
     this->contra = contra;
 }
 
+
+
+/**
+ * @brief Función para añadir un usuario a las actuales
+ * @param mensaje JSON del mensaje
+ * @param ok Booleano que confirmará si se ha conectado a la base de datos
+ * @return
+ */
 JSON usuarios::insertar(bool ok, JSON mensaje)
 {
     if (ok)
@@ -51,6 +65,12 @@ JSON usuarios::insertar(bool ok, JSON mensaje)
     }
 }
 
+/**
+ * @brief Funcion para comprobar si existe el usuario
+ * @param ok Booleano que confirmará si se ha conectado a la base de datos
+ * @param mensaje Es el mensaje enviado desde el cliente para interactuar con él
+ * @return
+ */
 JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string password
 {
     JSON mensajeDevuelto;
@@ -111,6 +131,12 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
     }
 
 }
+
+/**
+ * @brief Funcion para eliminar un usuario
+ * @param mensaje JSON del mensaje
+ * @param ok Booleano que confirmará si se ha conectado a la base de datos
+ */
 /*
 void usuarios::remove(int id)
 {
