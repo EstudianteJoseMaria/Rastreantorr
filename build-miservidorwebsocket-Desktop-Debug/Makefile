@@ -51,14 +51,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../main.cpp \
-		../mainwindow.cpp \
 		../productos.cpp \
-		../usuarios.cpp moc_mainwindow.cpp
+		../usuarios.cpp 
 OBJECTS       = main.o \
-		mainwindow.o \
 		productos.o \
-		usuarios.o \
-		moc_mainwindow.o
+		usuarios.o
 DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/common/unix.conf \
 		/usr/lib64/qt5/mkspecs/common/linux.conf \
@@ -236,11 +233,9 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib64/qt5/mkspecs/features/yacc.prf \
 		/usr/lib64/qt5/mkspecs/features/lex.prf \
-		../../miservidorwebsocket.pro ../mainwindow.h \
-		../json.hpp \
+		../../miservidorwebsocket.pro ../json.hpp \
 		../productos.h \
 		../usuarios.h ../main.cpp \
-		../mainwindow.cpp \
 		../productos.cpp \
 		../usuarios.cpp
 QMAKE_TARGET  = miservidorwebsocket
@@ -634,8 +629,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib64/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../mainwindow.h ../json.hpp ../productos.h ../usuarios.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../main.cpp ../mainwindow.cpp ../productos.cpp ../usuarios.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../json.hpp ../productos.h ../usuarios.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../main.cpp ../productos.cpp ../usuarios.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../mainwindow.ui $(DISTDIR)/
 	$(COPY_FILE) --parents myapp_es_ES.ts myapp_ca_ES.ts myapp_en_US.ts $(DISTDIR)/
 
@@ -669,14 +664,8 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib64/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -g -std=gnu++11 -Wall -W -dM -E -o moc_predefs.h /usr/lib64/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all:
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
-moc_mainwindow.cpp: ../mainwindow.h \
-		moc_predefs.h \
-		/usr/lib64/qt5/bin/moc
-	/usr/lib64/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib64/qt5/mkspecs/linux-g++ -I/home/usuario/QT/sockets -I/home/usuario/websocket/include -I/usr/include/qt5 -I/usr/include/qt5/QtWidgets -I/usr/include/qt5/QtGui -I/usr/include/qt5/QtSql -I/usr/include/qt5/QtCore -I. -I/usr/include/c++/7 -I/usr/include/c++/7/x86_64-suse-linux -I/usr/include/c++/7/backward -I/usr/lib64/gcc/x86_64-suse-linux/7/include -I/usr/local/include -I/usr/lib64/gcc/x86_64-suse-linux/7/include-fixed -I/usr/x86_64-suse-linux/include -I/usr/include ../mainwindow.h -o moc_mainwindow.cpp
-
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
 compiler_uic_make_all: ui_mainwindow.h
@@ -692,7 +681,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean compiler_uic_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_uic_clean 
 
 ####### Compile
 
@@ -717,14 +706,10 @@ main.o: ../main.cpp ../../../websocket/include/ixwebsocket/IXWebSocketServer.h \
 		../../../websocket/include/ixwebsocket/IXSocket.h \
 		../../../websocket/include/ixwebsocket/IXWebSocketInitResult.h \
 		../../../websocket/include/ixwebsocket/IXWebSocketPerMessageDeflate.h \
-		../usuario.h \
+		../usuarios.h \
 		../json.hpp \
 		../productos.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
-
-mainwindow.o: ../mainwindow.cpp ../mainwindow.h \
-		ui_mainwindow.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../mainwindow.cpp
 
 productos.o: ../productos.cpp ../productos.h \
 		../json.hpp
@@ -733,9 +718,6 @@ productos.o: ../productos.cpp ../productos.h \
 usuarios.o: ../usuarios.cpp ../usuarios.h \
 		../json.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o usuarios.o ../usuarios.cpp
-
-moc_mainwindow.o: moc_mainwindow.cpp 
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
 
 ####### Install
 

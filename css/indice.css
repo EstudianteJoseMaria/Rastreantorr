@@ -1,0 +1,71 @@
+ 
+ #divlogin{
+     width: 400px;
+     margin: 50px auto;
+     background-color: #F3EDED;
+     border: 1px solid #ECE8E8;
+     height: 400px;
+     border-radius:8px;
+     padding: 0px 9px 0px 9px;
+ }
+
+ #divreg{
+     width: 400px;
+     margin: 50px auto;
+     background-color: #F3EDED;
+     border: 1px solid #ECE8E8;
+     height: 400px;
+     border-radius:8px;
+     padding: 0px 9px 0px 9px;
+ }
+
+ #usuarioreg{
+    text-align: center;
+    margin: 50px 0px 0px 15%;
+    font-size: 14px;
+ }
+
+ .elemIni{
+    text-align: center;
+    margin: 20px 0px 0px 32%;
+    font-size: 14px;
+ }
+ 
+ .elemReg{
+    text-align: center;
+    margin: 20px 0px 0px 15%;
+    font-size: 14px;
+ }
+ 
+ #divIni{
+    padding: 4% 0px 0px 2%;
+    display: none;
+ }
+ 
+ #retroceso{
+    display:none;
+    margin: 20px 20px 20px 20px;
+ }
+ 
+ .divsConsulta{
+     border: 2px solid #ccc;
+     width: 400px;
+     height:150px;
+     margin: 20px 0px 60px 8%;
+     padding: 1% 0% 0% 1%;
+     float:left;
+ }
+ 
+ #busqueda{
+    top:35%;
+    display:none;
+ }
+ 
+ #estiloBusqueda{
+    border: 2px solid #ccc;
+    width: 600px;
+    height:180px;
+    margin: 0px 0px 0%  30%;
+    padding: 20px 0px 0px 30px;
+    margin-top:8%;
+ }

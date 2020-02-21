@@ -62,7 +62,10 @@ JSON Productos::cancelar(bool ok, JSON mensaje)
 {
     if (ok)
     {
-        QSqlQuery select;
+        QSqlQuery select;            ///El borrado seria un boton que diga eliminar busquedas, despues se abriria una
+                                    ///tabla mostrando los productos en busqueda de ese usuario, y este deberia seleccionar un
+                                    /// elemento de la lista para despues borrarlo.
+
         select.prepare("SELECT id_producto, nombre_producto FROM productos WHERE nombre_producto = :nombreproducto");
         select.bindValue(":nombreproducto", QString::fromStdString(mensaje["product"]));
         select.exec();
