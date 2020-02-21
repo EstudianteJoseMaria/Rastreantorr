@@ -44,6 +44,7 @@ int main(int, char *[])
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     bool conectado {false};
+    usuarios usuario("", "", "");   //Crear el usuario que se conecta (creo el usuari aqui porque no hay otro lugar donde lo pueda crear)
 
     ix::WebSocketServer server(9990, "0.0.0.0");
 
@@ -61,11 +62,11 @@ int main(int, char *[])
     server.setTLSOptions(tlsOptions);
 
     server.setOnConnectionCallback(
-        [&server, &db, &conectado](std::shared_ptr<ix::WebSocket> webSocket,
+        [&server, &db, &conectado, &usuario](std::shared_ptr<ix::WebSocket> webSocket,
                   std::shared_ptr<ix::ConnectionState> connectionState)
         {
             webSocket->setOnMessageCallback(
-                [webSocket, connectionState, &server, &db, &conectado](const ix::WebSocketMessagePtr msg)
+                [webSocket, connectionState, &server, &db, &conectado, &usuario](const ix::WebSocketMessagePtr msg)
                 {
                     if (msg->type == ix::WebSocketMessageType::Open)
                     {
@@ -79,6 +80,7 @@ int main(int, char *[])
 
                         conectado = db.open();
                         qDebug() << conectado;
+
 
                         //std::string messageToSend = jsonMessage1.dump();
                           //  webSocket->send(messageToSend);
@@ -102,12 +104,13 @@ int main(int, char *[])
                             ///RESPUESTA
                             //Usuario usuario;       //Segun lo que envie la pagina web (mensaje.action) hacer cosas sobre productos o sobre usuarios
                             Productos producto;
-                            usuarios usuario("", "", "");
+
                             if (js["action"] == "login")
                             {
                                 JSON mensaje = usuario.revisar(conectado, js);
                                 std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
                                 webSocket->send(mensajeEnviar);
+                                qDebug() << usuario.id;
                             }
                             else if (js["action"] == "register")
                             {

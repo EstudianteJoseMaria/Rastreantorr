@@ -16,9 +16,10 @@ public:
     JSON modificar(bool conex, JSON mensaje);
     JSON cancelar(bool conex, JSON mensaje);
     JSON revisar(bool conex, JSON mensaje);
+    int id;
 
 private:
-    int id;
+
     QString nombre;
     QString correo;
     QString contra;
