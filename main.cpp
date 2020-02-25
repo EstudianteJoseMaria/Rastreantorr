@@ -34,13 +34,13 @@ JSON producto(){ ///Funcion que devuelve un producto
 /**
  * Funcion principal
  */
-int main(int, char *[])
+int main(int argc, char *argv[] )
 {
-    /*QApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     QTranslator myappTranslator;
     myappTranslator.load("myapp_es_ES");
-    a.installTranslator(&myappTranslator);*/
+    a.installTranslator(&myappTranslator);
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     bool conectado {false};

@@ -32,7 +32,8 @@ SOURCES += \
 HEADERS += \
         testuser.h \
     doctest.h \
-    basedatos.h
+    basedatos.h \
+    doctest.h
 
 FORMS += \
         testuser.ui
