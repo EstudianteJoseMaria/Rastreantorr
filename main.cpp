@@ -39,7 +39,7 @@ int main(int argc, char *argv[] )
     QApplication a(argc, argv);
 
     QTranslator myappTranslator;
-    myappTranslator.load("myapp_es_ES");
+    myappTranslator.load("myapp_es_ES", "../");
     a.installTranslator(&myappTranslator);
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
@@ -70,7 +70,7 @@ int main(int argc, char *argv[] )
                 {
                     if (msg->type == ix::WebSocketMessageType::Open)
                     {
-                        std::cout << "New connection" << std::endl;
+                        qDebug() << QObject::tr("New connection");
 
                         ///Conexion base de datos
                         db.setHostName("localhost");
@@ -87,10 +87,10 @@ int main(int argc, char *argv[] )
                     }
                     else if (msg->type == ix::WebSocketMessageType::Close)
                     {
-                        std::cout << "Bye bye connection" << std::endl;
+                        qDebug() << QObject::tr("Bye bye connection");
                         if (conectado){
                             db.close();
-                            qDebug() << "BBDD cerrada";
+                            qDebug() << QObject::tr("BBDD cerrada");
                         }
                     }
                     else if (msg->type == ix::WebSocketMessageType::Message)
@@ -100,10 +100,10 @@ int main(int argc, char *argv[] )
                         if (!msg->binary)
                         {
                             ///Text format
-                            std::cout << "Received message: " << js << std::endl;
+                            qDebug() << QObject::tr("Received message: "), js;
                             ///RESPUESTA
                             //Usuario usuario;       //Segun lo que envie la pagina web (mensaje.action) hacer cosas sobre productos o sobre usuarios
-                            Productos producto;
+                            //Productos producto;
 
                             if (js["action"] == "login")
                             {
@@ -138,8 +138,8 @@ int main(int argc, char *argv[] )
                             else if (js["action"] == "agregar")     //Agregar producto
                             {                                      ///Esta comentado asi para que sea mas facil verlo
                                 JSON mensaje = {
-                                    {"idServer", idServer++},
-                                    {"idUser", js["id"]},
+                                    /*{"idServer", idServer++},
+                                    {"idUser", js["id"]},*/
                                     {"product", js["name"]},
                                     {"web", js["web"]},
                                 };

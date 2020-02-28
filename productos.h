@@ -1,6 +1,7 @@
 #ifndef PRODUCTOS_H
 #define PRODUCTOS_H
 #include <QString>
+#include <QSqlDatabase>
 
 #include "json.hpp"
 
@@ -13,7 +14,8 @@ private:
     int m_idProducto;
 
 public:
-    Productos();
+    QSqlDatabase m_db;
+    Productos(QSqlDatabase);
     std::string m_nombreProducto {""};
     QString m_fechaRegistro;
     int estado;

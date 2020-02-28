@@ -60,7 +60,7 @@ JSON usuarios::insertar(bool ok, JSON mensaje)
     }
     else
     {
-        qDebug("No estas conectado con la base de datos"); /// Falta JSON de error
+        qDebug() << QObject::tr("No estas conectado con la base de datos");/// Falta JSON de error
         return "";
     }
 }

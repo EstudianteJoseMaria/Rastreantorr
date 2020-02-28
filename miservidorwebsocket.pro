@@ -8,7 +8,6 @@ QT       += core gui
 QT += sql
 
 TRANSLATIONS += myapp_es_ES.ts
-TRANSLATIONS += myapp_ca_ES.ts
 TRANSLATIONS += myapp_en_US.ts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
