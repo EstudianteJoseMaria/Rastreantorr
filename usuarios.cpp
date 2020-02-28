@@ -12,7 +12,7 @@
  * @brief Constructor de usuarios
  * @return
  */
-usuarios::usuarios(QString nombre, QString correo, QString contra)
+usuarios::usuarios(QSqlDatabase db)
 {
     this->nombre = nombre;
     this->correo = correo;
@@ -48,7 +48,7 @@ JSON usuarios::insertar(bool ok, JSON mensaje)
 
             int id = query.lastInsertId().toInt();
             this->id = id;
-
+            qDebug() << "Insertado con éxito";
             mensajeEnviar["action"] = id;
             return mensajeEnviar;
         }else
@@ -77,7 +77,7 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
     if (ok)
     {
         bool login = false;
-        usuarios usuario("", "", "");
+        usuarios usuario(m_db);
         QSqlQuery query;
         query.prepare("SELECT correo, contrasena FROM usuarios where correo = :correo"); //(contrasena = crypt(:contrasena, contrasena))
 
@@ -89,6 +89,7 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
             if (query.value("contrasena") == QString::fromStdString(mensaje["contrasena"]))
             {
                 login = true;
+                qDebug() << "Login correcto";
             } //endif
             else
             {

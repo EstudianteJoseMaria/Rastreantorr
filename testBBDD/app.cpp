@@ -58,40 +58,8 @@ bool Db::select(QString valor)
     return result;
 }
 
-/*JSON Productos::cancelar(bool ok, JSON mensaje)
-{
-        QSqlQuery select;
-        select.prepare("SELECT id_producto, nombre_producto FROM productos WHERE nombre_producto = :nombreproducto");
-        select.bindValue(":nombreproducto", QString::fromStdString(mensaje["nombre_producto"]));
-        bool exists = select.exec();
-        std::list<QString> lista; ///Lista donde almacenaré los datos buscados
-        while (select.next()) {
-            qDebug() << select.value("nombre_producto").toString();
-        }
 
-        if (lista.size()>1)
-        {
-            qDebug() << QObject::tr("Hay mas de un elemento");
-        }
-        if (exists)
-        {
-            QSqlQuery query;
-            query.prepare("DELETE FROM productos WHERE nombre_producto = :nombreQuery");
-            query.bindValue(":nombreQuery", select.value("nombre_producto").toString());
-            bool result = query.exec();
-            mensaje["salida"] = result;
-            if(result) qDebug() << "Elemento borrado";
-            qDebug() << QObject::tr("Cancelar ") << query.lastError().text();
-            return mensaje;
-        }else return false;
 
-}
-
-Productos::Productos()
-{
-
-}
-*/
 Db::Db()
 {
     if (!QSqlDatabase::contains( "MyDb"))
@@ -113,7 +81,7 @@ void Db::close()
     m_db.close();
 }
 
-/*bool Db::start()
+bool Db::start()
 {
     bool result = 0;
 
@@ -165,7 +133,7 @@ void Db::close()
     } // end if
     qDebug() << result;
     return result;
-}*/
+}
 
 QSqlError Db::lastError()
 {
@@ -185,9 +153,7 @@ TEST_CASE("base datos #0")
     mensaje["web"] = "amazon";
     Db db;
 
-
-
-    if (true) //p.m_db.isOpen())
+    if (db.start()) //p.m_db.isOpen())
     {
         qDebug() << "DB UP AND RUNNING";
         Productos p(db.m_db);
@@ -195,11 +161,48 @@ TEST_CASE("base datos #0")
         {
             CHECK( p.insertar(true, mensaje)["salida"] == true );
         }
+        SUBCASE("Cancelar #0")
+        {
+            CHECK( p.insertar(true, mensaje)["salida"] == true );
+            CHECK( p.cancelar(true, mensaje)["salida"] == true );
+        }
         SUBCASE("Select #0")
         {
-            CHECK( p.revisar(true, mensaje)["salida"] == true );
+            qDebug() << "Deberia dar error porque objeto a buscar no existe";
+            CHECK( p.revisar(true, mensaje)["salida"] == false );
         }
-        SUBCASE("Cancelar #0")
+        SUBCASE("Cancelar #1")
+        {
+            qDebug() << "Deberia dar error porque la conex a la bbdd es false";
+            CHECK( p.cancelar(false, mensaje)["salida"] == false );
+        }
+    }
+    else
+    {
+        qDebug() << db.lastError().text();
+
+    } // end if
+
+}
+
+TEST_CASE("producto #1")
+{
+
+    JSON mensaje;
+    mensaje["product"] = "Patata";
+    mensaje["web"] = "amazon";
+    Db db;
+
+    if (true)
+    {
+        Productos p(db.m_db);       //Se está ejecutando 2 veces y no deberia
+        qDebug() << "DB UP AND RUNNING";
+
+        SUBCASE("Insertar #1")
+        {
+            CHECK( p.insertar(true, mensaje)["salida"] == true );
+        }
+        SUBCASE("Cancelar #1")
         {
             CHECK( p.cancelar(true, mensaje)["salida"] == true );
         }
@@ -211,34 +214,3 @@ TEST_CASE("base datos #0")
     } // end if
 
 }
-
-/*TEST_CASE("producto #1")
-{
-
-    JSON mensaje;
-    mensaje["product"] = "Patata";
-    mensaje["web"] = "amazon";
-    Db db;
-
-    if (db.start())
-    {
-        Productos producto(db.m_db);
-        qDebug() << "DB UP AND RUNNING";
-
-        SUBCASE("Insertar #1")
-        {
-            JSON mensajeDevuelto;
-            mensajeDevuelto = producto.insertar(true, mensaje);
-
-            std::cout << mensajeDevuelto << std::endl;
-
-            CHECK( mensajeDevuelto["salida"] == true );
-        }
-    }
-    else
-    {
-        qDebug() << db.lastError().text();
-
-    } // end if
-
-}*/

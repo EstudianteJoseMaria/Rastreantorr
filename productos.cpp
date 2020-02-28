@@ -64,45 +64,27 @@ JSON Productos::modificar(bool ok, JSON mensaje)
  * @param ok Booleano que confirmará si se ha conectado a la base de datos
  * @param mensaje Es el mensaje enviado desde el cliente para interactuar con él
  */
+///El borrado seria un boton que diga eliminar busquedas, despues se abriria una
+///tabla mostrando los productos en busqueda de ese usuario, y este deberia seleccionar un
+/// elemento de la lista para despues borrarlo.
 JSON Productos::cancelar(bool ok, JSON mensaje)
 {
     JSON mensajeDevuelto;
     if (ok)
     {
-        QSqlQuery select(m_db);            ///El borrado seria un boton que diga eliminar busquedas, despues se abriria una
-                                    ///tabla mostrando los productos en busqueda de ese usuario, y este deberia seleccionar un
-                                    /// elemento de la lista para despues borrarlo.
+        QSqlQuery query(m_db);
+        query.prepare("DELETE FROM productos WHERE nombre_producto = :nombreQuery");
+        query.bindValue(":nombreQuery", QString::fromStdString(mensaje["product"]));
+        mensajeDevuelto["salida"] = query.exec();
+        qDebug() << QObject::tr("Cancelar ") << query.lastError().text();
 
-        select.prepare("SELECT id_producto, nombre_producto FROM productos WHERE nombre_producto = :nombreproducto");
-        select.bindValue(":nombreproducto", QString::fromStdString(mensaje["product"]));
-        mensajeDevuelto["salida"] = select.exec();
-        std::list<QString> lista; ///Lista donde almacenaré los datos buscados
-        while (select.next()) {
-            lista.push_back(select.value("nombre_producto").toString());
+        mensajeDevuelto["action"] = "delete";
+        mensajeDevuelto["errorType"] = query.lastError().text().toStdString();
 
-            qDebug() << select.value("nombre_producto").toString();
-
-        }
-
-        if (lista.size()>1)
-        {
-            mensajeDevuelto["action"] = "delete";
-            mensajeDevuelto["errorType"] = "false";
             /// No mostrar en el cliente todos los elementos
             /// Tengo que hacer que el registro de usuarios tenga un registro de sus propios productos
             /// buscados para que cada uno vea solo sus productos
-
-            qDebug() << QObject::tr("Hay mas de un elemento");
-
-            ///LLamar a mensaje javascript para pedir confirmacion
-        }
-
-        QSqlQuery query;
-        query.prepare("DELETE FROM productos WHERE nombre_producto = :nombreQuery");
-        query.bindValue(":nombreQuery", select.value("nombre_producto").toString());
-        query.exec();
-        qDebug() << QObject::tr("Cancelar ") << query.lastError().text();
-    }
+    } else mensajeDevuelto["salida"] = false; mensajeDevuelto["errorType"] = "No estas conectado a la bbdd";
     return mensajeDevuelto;
 }
 
@@ -141,18 +123,33 @@ JSON Productos::revisar(bool ok, JSON mensaje) ///Aqui estarian las comprobacion
         mensajeDevuelto["action"] = "select";
                                                     //Hay que hacer comprobacion de errores
         qDebug() << QObject::tr("Select Error:  ") << query.lastError().text();
-        //qDebug() << QString::fromStdString(mensaje.dump());
 
-        return mensajeDevuelto;
     }
-    else return "No se han podido encontrar resultados.";
+    else mensajeDevuelto["errorType"] = "No se han podido encontrar resultados."; mensajeDevuelto["salida"] = false;
+
+    return mensajeDevuelto;
 }
 
 Productos::Productos(QSqlDatabase db)
 {
-    //db.database();
 
-    db.close();
+    if (!QSqlDatabase::contains( "MyDb"))
+    {
+        m_db = QSqlDatabase::addDatabase("QPSQL", "MyDb");
+    }
+    else
+    {
+        m_db = QSqlDatabase::database("MyDb");
+    } // end if
+    m_db.setHostName("localhost");
+    m_db.setPort(5432);
+    m_db.setUserName("postgres");
+    m_db.setPassword("");
+
+    /*db.database();
+    m_db.setDatabaseName(db.databaseName());
+    bool ok = m_db.open();*/
+    /*db.close();
     db.setDatabaseName("template1");
     bool ok = db.open();
     if (ok)
@@ -198,5 +195,5 @@ Productos::Productos(QSqlDatabase db)
         } // end if
 
     } // end if
-    //qDebug() << "Base iniciada";
+    //qDebug() << "Base iniciada";*/
 }

@@ -15,24 +15,22 @@
 
 using JSON = nlohmann::json;
 
+/*! \file */
+
 /**
- * Funcion para comprobar la extistencia de un JSON
+ * @brief Funcion para comprobar la existencia de un JSON
+ * @param json Es el JSON a comprobar
+ * @param key
+ * @return
  */
-bool exists(const JSON& json, const std::string& key){ ///Comprobador si existe el contenido de un JSON
+bool exists(const JSON& json, const std::string& key){
     return json.find(key) != json.end();
 }
 
-JSON producto(){ ///Funcion que devuelve un producto
-    JSON producto = {
-        {"nombre", "Patatas"},
-        {"precio", 10},
-        {"web", "www.google.es"}
-    };
-    return producto;
-}
-
 /**
- * Funcion principal
+ * @brief main Funcion principal del programa donde se gestiona el comportamiento del servidor
+ * @param argc
+ * @param argv
  */
 int main(int argc, char *argv[] )
 {
@@ -44,7 +42,7 @@ int main(int argc, char *argv[] )
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     bool conectado {false};
-    usuarios usuario("", "", "");   //Crear el usuario que se conecta (creo el usuari aqui porque no hay otro lugar donde lo pueda crear)
+    usuarios usuario(db);   //Crear el usuario que se conecta (creo el usuari aqui porque no hay otro lugar donde lo pueda crear)
 
     ix::WebSocketServer server(9990, "0.0.0.0");
 
@@ -100,10 +98,11 @@ int main(int argc, char *argv[] )
                         if (!msg->binary)
                         {
                             ///Text format
-                            qDebug() << QObject::tr("Received message: "), js;
+                            qDebug() << QObject::tr("Received message: ");
+                            std::cout << js << std::endl;
                             ///RESPUESTA
-                            //Usuario usuario;       //Segun lo que envie la pagina web (mensaje.action) hacer cosas sobre productos o sobre usuarios
-                            //Productos producto;
+                            usuarios usuario(db);
+                            Productos producto(db);
 
                             if (js["action"] == "login")
                             {
@@ -123,7 +122,6 @@ int main(int argc, char *argv[] )
                             }
                             else if (js["action"] == "estado")       //Comprobar producto
                             {
-                                //producto.m_nombreProducto = js["name"];
                                 JSON mensaje = {
                                     {"idServer", idServer++},
                                     {"idUser", js["id"]},
