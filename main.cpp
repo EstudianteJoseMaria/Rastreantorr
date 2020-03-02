@@ -17,7 +17,7 @@ using JSON = nlohmann::json;
 
 /*! \file */
 
-/*! \mainpage Documentacion del socket
+/*! \mainpage Documentaciuon del socket
  * Programa desarrollado para poder hacer una gestión de unos productos almacenados en una base de datos
  * En desarrollo
  * */

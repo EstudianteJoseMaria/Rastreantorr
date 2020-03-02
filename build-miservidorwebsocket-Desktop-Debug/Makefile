@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -g -std=gnu++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I../../sockets -I. -I../../../websocket/include -isystem /usr/include/qt5 -isystem /usr/include/qt5/QtWidgets -isystem /usr/include/qt5/QtGui -isystem /usr/include/qt5/QtSql -isystem /usr/include/qt5/QtCore -I. -isystem /usr/include/libdrm -I/usr/lib64/qt5/mkspecs/linux-g++
+INCPATH       = -I../../sockets -I. -I../websocket/include -isystem /usr/include/qt5 -isystem /usr/include/qt5/QtWidgets -isystem /usr/include/qt5/QtGui -isystem /usr/include/qt5/QtSql -isystem /usr/include/qt5/QtCore -I. -isystem /usr/include/libdrm -I/usr/lib64/qt5/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake-qt5
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -38,7 +38,7 @@ DISTNAME      = miservidorwebsocket1.0.0
 DISTDIR = /home/usuario/QT/sockets/build-miservidorwebsocket-Desktop-Debug/.tmp/miservidorwebsocket1.0.0
 LINK          = g++
 LFLAGS        = 
-LIBS          = $(SUBLIBS) -pthread -lz -lssl -lcrypto -L/home/usuario/QT/sockets/../../websocket/lib/ -lixwebsocket -lQt5Widgets -L/usr/lib64 -lQt5Gui -lQt5Sql -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -pthread -lz -lssl -lcrypto -L/home/usuario/QT/sockets/websocket/lib/ -lixwebsocket -lQt5Widgets -L/usr/lib64 -lQt5Gui -lQt5Sql -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -246,7 +246,7 @@ TARGET        = miservidorwebsocket
 first: all
 ####### Build rules
 
-$(TARGET): /home/usuario/QT/sockets/../../websocket/lib/libixwebsocket.a $(OBJECTS)  
+$(TARGET): /home/usuario/QT/sockets/websocket/lib/libixwebsocket.a $(OBJECTS)  
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(OBJCOMP) $(LIBS)
 
 Makefile: ../miservidorwebsocket.pro /usr/lib64/qt5/mkspecs/linux-g++/qmake.conf /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
@@ -679,27 +679,27 @@ compiler_clean: compiler_moc_predefs_clean
 
 ####### Compile
 
-main.o: ../main.cpp ../../../websocket/include/ixwebsocket/IXWebSocketServer.h \
-		../../../websocket/include/ixwebsocket/IXSocketServer.h \
-		../../../websocket/include/ixwebsocket/IXConnectionState.h \
-		../../../websocket/include/ixwebsocket/IXSocketTLSOptions.h \
-		../../../websocket/include/ixwebsocket/IXWebSocket.h \
-		../../../websocket/include/ixwebsocket/IXProgressCallback.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketCloseConstants.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketErrorInfo.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketHttpHeaders.h \
-		../../../websocket/include/ixwebsocket/IXCancellationRequest.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketMessage.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketCloseInfo.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketMessageType.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketOpenInfo.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketPerMessageDeflateOptions.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketSendInfo.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketTransport.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketHandshake.h \
-		../../../websocket/include/ixwebsocket/IXSocket.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketInitResult.h \
-		../../../websocket/include/ixwebsocket/IXWebSocketPerMessageDeflate.h \
+main.o: ../main.cpp ../websocket/include/ixwebsocket/IXWebSocketServer.h \
+		../websocket/include/ixwebsocket/IXSocketServer.h \
+		../websocket/include/ixwebsocket/IXConnectionState.h \
+		../websocket/include/ixwebsocket/IXSocketTLSOptions.h \
+		../websocket/include/ixwebsocket/IXWebSocket.h \
+		../websocket/include/ixwebsocket/IXProgressCallback.h \
+		../websocket/include/ixwebsocket/IXWebSocketCloseConstants.h \
+		../websocket/include/ixwebsocket/IXWebSocketErrorInfo.h \
+		../websocket/include/ixwebsocket/IXWebSocketHttpHeaders.h \
+		../websocket/include/ixwebsocket/IXCancellationRequest.h \
+		../websocket/include/ixwebsocket/IXWebSocketMessage.h \
+		../websocket/include/ixwebsocket/IXWebSocketCloseInfo.h \
+		../websocket/include/ixwebsocket/IXWebSocketMessageType.h \
+		../websocket/include/ixwebsocket/IXWebSocketOpenInfo.h \
+		../websocket/include/ixwebsocket/IXWebSocketPerMessageDeflateOptions.h \
+		../websocket/include/ixwebsocket/IXWebSocketSendInfo.h \
+		../websocket/include/ixwebsocket/IXWebSocketTransport.h \
+		../websocket/include/ixwebsocket/IXWebSocketHandshake.h \
+		../websocket/include/ixwebsocket/IXSocket.h \
+		../websocket/include/ixwebsocket/IXWebSocketInitResult.h \
+		../websocket/include/ixwebsocket/IXWebSocketPerMessageDeflate.h \
 		../usuarios.h \
 		../json.hpp \
 		../productos.h
