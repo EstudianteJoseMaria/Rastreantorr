@@ -1,0 +1,118 @@
+\hypertarget{classProductos}{}\section{Productos Class Reference}
+\label{classProductos}\index{Productos@{Productos}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classProductos_abd52ab294189b3aa69f9fa70181fd416}\label{classProductos_abd52ab294189b3aa69f9fa70181fd416}} 
+{\bfseries Productos} (Q\+Sql\+Database)
+\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classProductos_acaabd57ce0ce71a2126ce49b11eb8ae1}{insertar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Función para añadir una búsqueda a las actuales. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classProductos_a2c74f34bcdc389ffe8b5413f21e21db5}{modificar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Funcion para modificar un producto en búsqueda. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classProductos_a96ba61331dee6f46aa751df1e67c91a5}{cancelar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Funcion para cancelar la búsqueda de un producto. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classProductos_aab417da8db29ade463c7c5102e273d16}{revisar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Funcion para comprobar el estado de un producto. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classProductos_a154c164c166207d2a139262ea9a565e3}\label{classProductos_a154c164c166207d2a139262ea9a565e3}} 
+Q\+Sql\+Database {\bfseries m\+\_\+db}
+\item 
+\mbox{\Hypertarget{classProductos_ad07641725783d283cc9f28596b191781}\label{classProductos_ad07641725783d283cc9f28596b191781}} 
+std\+::string {\bfseries m\+\_\+nombre\+Producto} \{\char`\"{}\char`\"{}\}
+\item 
+\mbox{\Hypertarget{classProductos_a42a5ce5a82ca7441cb09f9526e1bf05c}\label{classProductos_a42a5ce5a82ca7441cb09f9526e1bf05c}} 
+Q\+String {\bfseries m\+\_\+fecha\+Registro}
+\item 
+\mbox{\Hypertarget{classProductos_a66bc7bb5d5c9416f67bedebf1a96bbe0}\label{classProductos_a66bc7bb5d5c9416f67bedebf1a96bbe0}} 
+int {\bfseries estado}
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classProductos_a96ba61331dee6f46aa751df1e67c91a5}\label{classProductos_a96ba61331dee6f46aa751df1e67c91a5}} 
+\index{Productos@{Productos}!cancelar@{cancelar}}
+\index{cancelar@{cancelar}!Productos@{Productos}}
+\subsubsection{\texorpdfstring{cancelar()}{cancelar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} Productos\+::cancelar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Funcion para cancelar la búsqueda de un producto. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em producto} & Nombre del producto a tratar \\
+\hline
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+{\em mensaje} & Es el mensaje enviado desde el cliente para interactuar con él\+El borrado seria un boton que diga eliminar busquedas, despues se abriria una tabla mostrando los productos en busqueda de ese usuario, y este deberia seleccionar un elemento de la lista para despues borrarlo. \\
+\hline
+\end{DoxyParams}
+No mostrar en el cliente todos los elementos Tengo que hacer que el registro de usuarios tenga un registro de sus propios productos buscados para que cada uno vea solo sus productos \mbox{\Hypertarget{classProductos_acaabd57ce0ce71a2126ce49b11eb8ae1}\label{classProductos_acaabd57ce0ce71a2126ce49b11eb8ae1}} 
+\index{Productos@{Productos}!insertar@{insertar}}
+\index{insertar@{insertar}!Productos@{Productos}}
+\subsubsection{\texorpdfstring{insertar()}{insertar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} Productos\+::insertar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Función para añadir una búsqueda a las actuales. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em producto} & Nombre del producto a tratar \\
+\hline
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classProductos_a2c74f34bcdc389ffe8b5413f21e21db5}\label{classProductos_a2c74f34bcdc389ffe8b5413f21e21db5}} 
+\index{Productos@{Productos}!modificar@{modificar}}
+\index{modificar@{modificar}!Productos@{Productos}}
+\subsubsection{\texorpdfstring{modificar()}{modificar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} Productos\+::modificar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Funcion para modificar un producto en búsqueda. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em producto} & Nombre del producto a tratar \\
+\hline
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\mbox{\Hypertarget{classProductos_aab417da8db29ade463c7c5102e273d16}\label{classProductos_aab417da8db29ade463c7c5102e273d16}} 
+\index{Productos@{Productos}!revisar@{revisar}}
+\index{revisar@{revisar}!Productos@{Productos}}
+\subsubsection{\texorpdfstring{revisar()}{revisar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} Productos\+::revisar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Funcion para comprobar el estado de un producto. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em producto} & Nombre del producto a tratar \\
+\hline
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+{\em mensaje} & Es el mensaje enviado desde el cliente para interactuar con él  estarian las comprobaciones del estado del producto \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+productos.\+h\item 
+\mbox{\hyperlink{productos_8cpp}{productos.\+cpp}}\end{DoxyCompactItemize}

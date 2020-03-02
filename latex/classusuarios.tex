@@ -1,0 +1,107 @@
+\hypertarget{classusuarios}{}\section{usuarios Class Reference}
+\label{classusuarios}\index{usuarios@{usuarios}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classusuarios_adaf928e8a210acac0e9792e0cd4e667f}{usuarios}} (Q\+Sql\+Database)
+\begin{DoxyCompactList}\small\item\em Constructor de usuarios. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classusuarios_a6939c773dde8627785009eacd28dd9a8}{insertar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Función para añadir un usuario a las actuales. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classusuarios_a2ab004f03d21059be4321506ad89dc8f}\label{classusuarios_a2ab004f03d21059be4321506ad89dc8f}} 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} {\bfseries modificar} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classusuarios_a3a93fae14bb3554e1b9d4742dd9e6a97}{cancelar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Funcion para eliminar un usuario. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} \mbox{\hyperlink{classusuarios_ad875eae5fff50925fa35dfa80728a87e}{revisar}} (bool conex, \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} mensaje)
+\begin{DoxyCompactList}\small\item\em Funcion para comprobar si existe el usuario. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classusuarios_a6482c9d76712ca8b33e87fdeb9c6619e}\label{classusuarios_a6482c9d76712ca8b33e87fdeb9c6619e}} 
+Q\+Sql\+Database {\bfseries m\+\_\+db}
+\item 
+\mbox{\Hypertarget{classusuarios_ab69b925316f6d27b13e9ad7b940b3f9f}\label{classusuarios_ab69b925316f6d27b13e9ad7b940b3f9f}} 
+int {\bfseries id}
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classusuarios_adaf928e8a210acac0e9792e0cd4e667f}\label{classusuarios_adaf928e8a210acac0e9792e0cd4e667f}} 
+\index{usuarios@{usuarios}!usuarios@{usuarios}}
+\index{usuarios@{usuarios}!usuarios@{usuarios}}
+\subsubsection{\texorpdfstring{usuarios()}{usuarios()}}
+{\footnotesize\ttfamily usuarios\+::usuarios (\begin{DoxyParamCaption}\item[{Q\+Sql\+Database}]{db }\end{DoxyParamCaption})}
+
+
+
+Constructor de usuarios. 
+
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classusuarios_a3a93fae14bb3554e1b9d4742dd9e6a97}\label{classusuarios_a3a93fae14bb3554e1b9d4742dd9e6a97}} 
+\index{usuarios@{usuarios}!cancelar@{cancelar}}
+\index{cancelar@{cancelar}!usuarios@{usuarios}}
+\subsubsection{\texorpdfstring{cancelar()}{cancelar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} usuarios\+::cancelar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Funcion para eliminar un usuario. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mensaje} & J\+S\+ON del mensaje \\
+\hline
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classusuarios_a6939c773dde8627785009eacd28dd9a8}\label{classusuarios_a6939c773dde8627785009eacd28dd9a8}} 
+\index{usuarios@{usuarios}!insertar@{insertar}}
+\index{insertar@{insertar}!usuarios@{usuarios}}
+\subsubsection{\texorpdfstring{insertar()}{insertar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} usuarios\+::insertar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Función para añadir un usuario a las actuales. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mensaje} & J\+S\+ON del mensaje \\
+\hline
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+Falta J\+S\+ON de error \mbox{\Hypertarget{classusuarios_ad875eae5fff50925fa35dfa80728a87e}\label{classusuarios_ad875eae5fff50925fa35dfa80728a87e}} 
+\index{usuarios@{usuarios}!revisar@{revisar}}
+\index{revisar@{revisar}!usuarios@{usuarios}}
+\subsubsection{\texorpdfstring{revisar()}{revisar()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}} usuarios\+::revisar (\begin{DoxyParamCaption}\item[{bool}]{ok,  }\item[{\mbox{\hyperlink{classnlohmann_1_1basic__json}{J\+S\+ON}}}]{mensaje }\end{DoxyParamCaption})}
+
+
+
+Funcion para comprobar si existe el usuario. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ok} & Booleano que confirmará si se ha conectado a la base de datos \\
+\hline
+{\em mensaje} & Es el mensaje enviado desde el cliente para interactuar con él \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+usuarios.\+h\item 
+\mbox{\hyperlink{usuarios_8cpp}{usuarios.\+cpp}}\end{DoxyCompactItemize}

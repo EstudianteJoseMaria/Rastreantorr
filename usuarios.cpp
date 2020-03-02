@@ -138,12 +138,16 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
  * @param mensaje JSON del mensaje
  * @param ok Booleano que confirmará si se ha conectado a la base de datos
  */
-/*
-void usuarios::remove(int id)
+JSON usuarios::cancelar(bool ok, JSON mensaje)
 {
-    QSqlQuery query;
-    query.prepare("DELETE FROM usuario where idusuario = :id");
+    if(ok)
+    {
+        QSqlQuery query;
+        query.prepare("DELETE FROM usuario where idusuario = :id");
 
-    query.bindValue(":id", id);
-    query.exec();
-}*/
+        query.bindValue(":id", id);
+        query.exec();
+    }
+
+    return mensaje;
+}

@@ -17,6 +17,11 @@ using JSON = nlohmann::json;
 
 /*! \file */
 
+/*! \mainpage Documentacion del socket
+ * Programa desarrollado para poder hacer una gestión de unos productos almacenados en una base de datos
+ * En desarrollo
+ * */
+
 /**
  * @brief Funcion para comprobar la existencia de un JSON
  * @param json Es el JSON a comprobar
@@ -42,7 +47,7 @@ int main(int argc, char *argv[] )
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     bool conectado {false};
-    usuarios usuario(db);   //Crear el usuario que se conecta (creo el usuari aqui porque no hay otro lugar donde lo pueda crear)
+    usuarios usuario(db);   //Crear el usuario que se conecta
 
     ix::WebSocketServer server(9990, "0.0.0.0");
 
@@ -78,10 +83,6 @@ int main(int argc, char *argv[] )
 
                         conectado = db.open();
                         qDebug() << conectado;
-
-
-                        //std::string messageToSend = jsonMessage1.dump();
-                          //  webSocket->send(messageToSend);
                     }
                     else if (msg->type == ix::WebSocketMessageType::Close)
                     {
@@ -107,7 +108,7 @@ int main(int argc, char *argv[] )
                             if (js["action"] == "login")
                             {
                                 JSON mensaje = usuario.revisar(conectado, js);
-                                std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
+                                std::string mensajeEnviar = mensaje.dump();
                                 webSocket->send(mensajeEnviar);
                                 qDebug() << usuario.id;
                             }
@@ -116,7 +117,7 @@ int main(int argc, char *argv[] )
                                 JSON mensaje = usuario.insertar(conectado, js);
                                 if(mensaje != "")
                                 {
-                                    std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
+                                    std::string mensajeEnviar = mensaje.dump();
                                     webSocket->send(mensajeEnviar);
                                 }
                             }
@@ -128,18 +129,14 @@ int main(int argc, char *argv[] )
                                     {"product", js["name"]},
                                     {"web", js["web"]},
                                 };
-                                mensaje = producto.revisar(conectado, mensaje); //Hacer esto
+                                mensaje = producto.revisar(conectado, mensaje);
 
-                                std::string mensajeEnviar = mensaje.dump(); ///Devuelvo el estado
+                                std::string mensajeEnviar = mensaje.dump();
                                 webSocket->send(mensajeEnviar);
                             }
-                            else if (js["action"] == "agregar")     //Agregar producto
-                            {                                      ///Esta comentado asi para que sea mas facil verlo
+                            else if (js["action"] == "agregar"){     //Agregar producto
                                 JSON mensaje = {
-                                    /*{"idServer", idServer++},
-                                    {"idUser", js["id"]},*/
                                     {"product", js["name"]},
-                                    {"web", js["web"]},
                                 };
                                 mensaje = producto.insertar(conectado, mensaje);
 
