@@ -31,12 +31,14 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
     productos.cpp \
-    usuarios.cpp
+    usuarios.cpp \
+    bbdd.cpp
 
 HEADERS += \
         json.hpp \
     productos.h \
-    usuarios.h
+    usuarios.h \
+    bbdd.h
         productos.h
 
 FORMS +=

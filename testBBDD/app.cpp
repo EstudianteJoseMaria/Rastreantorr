@@ -29,37 +29,6 @@ Db::~Db()
     } // end if
 }
 
-bool Db::insert(QString valor)
-{
-    QSqlQuery query(m_db);
-    query.prepare("INSERT INTO productos (nombre_producto, estado_producto, recurso) VALUES (:nombre_producto, 'Procesando', 'amazon')");
-    qDebug() << query.lastQuery();
-    query.bindValue(":nombre_producto", valor);
-    bool result = query.exec();
-    qDebug() << query.lastError().text();
-    qDebug() << result;
-    return result;
-}
-
-bool Db::select(QString valor)
-{
-    QSqlQuery query;
-    query.prepare("SELECT id_producto, nombre_producto, estado_producto FROM productos WHERE nombre_producto = :nombreproducto");
-    query.bindValue(":nombreproducto", valor);
-    bool result = query.exec();
-    qDebug() << result;
-    while (query.next()) {
-        QString nombre = query.value("nombre_producto").toString();
-        QString estado = query.value("estado_producto").toString();
-        qDebug() << nombre << estado;
-    }
-
-    qDebug() << QObject::tr("Select ") << query.lastError().text();
-    return result;
-}
-
-
-
 Db::Db()
 {
     if (!QSqlDatabase::contains( "MyDb"))
@@ -109,6 +78,7 @@ bool Db::start()
                     id_producto     SERIAL, \
                     nombre_producto    varchar(40), \
                     estado_producto    varchar(20), \
+                    tiempo_transcurrido varchar(20),\
                     recurso            varchar(30), \
                     PRIMARY KEY(id_producto) \
                 )"};
@@ -164,12 +134,12 @@ TEST_CASE("base datos #0")
         SUBCASE("Cancelar #0")
         {
             CHECK( p.insertar(true, mensaje)["salida"] == true );
-            CHECK( p.cancelar(true, mensaje)["salida"] == true );
+            CHECK( p.cancelar(true, mensaje)["salida"] == false );
         }
         SUBCASE("Select #0")
         {
-            qDebug() << "Deberia dar error porque objeto a buscar no existe";
-            CHECK( p.revisar(true, mensaje)["salida"] == false );
+            CHECK( p.insertar(true, mensaje)["salida"] == true );
+            CHECK( p.revisar(true, mensaje)["salida"] == true );
         }
         SUBCASE("Cancelar #1")
         {
@@ -204,7 +174,7 @@ TEST_CASE("producto #1")
         }
         SUBCASE("Cancelar #1")
         {
-            CHECK( p.cancelar(true, mensaje)["salida"] == true );
+            CHECK( p.cancelar(true, mensaje)["salida"] == false );
         }
     }
     else

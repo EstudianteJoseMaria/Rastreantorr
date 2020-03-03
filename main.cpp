@@ -10,6 +10,7 @@
 
 #include "usuarios.h"
 #include "productos.h"
+#include "bbdd.h"
 
 #include "json.hpp"
 
@@ -17,13 +18,13 @@ using JSON = nlohmann::json;
 
 /*! \file */
 
-/*! \mainpage Documentaciuon del socket
- * Programa desarrollado para poder hacer una gestión de unos productos almacenados en una base de datos
+/*! \mainpage Documentación del socket
+ * Programa desarrollado para poder hacer una gestión de unos productos almacenados en una base de datos  \n
  * En desarrollo
  * */
 
 /**
- * @brief Funcion para comprobar la existencia de un JSON
+ * @brief Función para comprobar la existencia de un JSON
  * @param json Es el JSON a comprobar
  * @param key
  * @return
@@ -33,7 +34,7 @@ bool exists(const JSON& json, const std::string& key){
 }
 
 /**
- * @brief main Funcion principal del programa donde se gestiona el comportamiento del servidor
+ * @brief main Función principal del programa donde se gestiona el comportamiento del servidor
  * @param argc
  * @param argv
  */
@@ -45,9 +46,10 @@ int main(int argc, char *argv[] )
     myappTranslator.load("myapp_es_ES", "../");
     a.installTranslator(&myappTranslator);
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+    BBDD db("../config.prop");
+    //QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
     bool conectado {false};
-    usuarios usuario(db);   //Crear el usuario que se conecta
+    usuarios usu(db.m_db);   //Crear el usuario que se conecta
 
     ix::WebSocketServer server(9990, "0.0.0.0");
 
@@ -62,26 +64,23 @@ int main(int argc, char *argv[] )
         std::cerr << "SSL valid" << std::endl;
     }
 
-    server.setTLSOptions(tlsOptions);
+    //server.setTLSOptions(tlsOptions);
 
     server.setOnConnectionCallback(
-        [&server, &db, &conectado, &usuario](std::shared_ptr<ix::WebSocket> webSocket,
+        [&server, &db, &conectado, &usu](std::shared_ptr<ix::WebSocket> webSocket,
                   std::shared_ptr<ix::ConnectionState> connectionState)
         {
             webSocket->setOnMessageCallback(
-                [webSocket, connectionState, &server, &db, &conectado, &usuario](const ix::WebSocketMessagePtr msg)
+                [webSocket, connectionState, &server, &db, &conectado, &usu](const ix::WebSocketMessagePtr msg)
                 {
                     if (msg->type == ix::WebSocketMessageType::Open)
                     {
                         qDebug() << QObject::tr("New connection");
 
-                        ///Conexion base de datos
-                        db.setHostName("localhost");
-                        db.setDatabaseName("sockets");
-                        db.setUserName("postgres");
-                        db.setPassword("");
+                        //Conexion base de datos
 
                         conectado = db.open();
+
                         qDebug() << conectado;
                     }
                     else if (msg->type == ix::WebSocketMessageType::Close)
@@ -98,12 +97,12 @@ int main(int argc, char *argv[] )
                         auto js = JSON::parse(msg->str);
                         if (!msg->binary)
                         {
-                            ///Text format
+                            //Text format
                             qDebug() << QObject::tr("Received message: ");
                             std::cout << js << std::endl;
-                            ///RESPUESTA
-                            usuarios usuario(db);
-                            Productos producto(db);
+                            //RESPUESTA
+                            usuarios usuario(db.m_db);
+                            Productos producto(db.m_db);
 
                             if (js["action"] == "login")
                             {

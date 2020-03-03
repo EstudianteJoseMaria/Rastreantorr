@@ -6,16 +6,11 @@
 #include <QDebug>
 #include <list>
 
+
 //TRUNCATE TABLE nombre_de_la_tabla RESTART IDENTITY;
 
 /*! \file */
 
-/**
- * @brief Función para añadir una búsqueda a las actuales
- * @param producto Nombre del producto a tratar
- * @param ok Booleano que confirmará si se ha conectado a la base de datos
- * @return
- */
 JSON Productos::insertar(bool ok, JSON mensaje)
 {
     JSON mensajeDevuelto;
@@ -27,7 +22,16 @@ JSON Productos::insertar(bool ok, JSON mensaje)
         query.bindValue(":nombreQuery", QString::fromStdString(mensaje["product"]));
         query.bindValue(":recursoQuery", QString::fromStdString(mensaje["web"]));
 
-        mensajeDevuelto["salida"] = query.exec();
+        query.exec();
+
+        if(m_db.databaseName() == "test_sockets")
+        {
+            QSqlQuery testQuery(m_db);
+            testQuery.prepare("SELECT id_producto, nombre_producto, recurso FROM productos WHERE id_producto = :idproducto");
+            testQuery.bindValue(":idproducto", query.lastInsertId().toString());
+            mensajeDevuelto["salida"] = testQuery.exec();
+            qDebug() << "El insert ha salido exitoso";
+        }
         mensajeDevuelto["action"] = "insert";
         mensajeDevuelto["error type"] = query.lastError().text().toStdString();
 
@@ -38,17 +42,11 @@ JSON Productos::insertar(bool ok, JSON mensaje)
     return mensajeDevuelto;
 }
 
-/**
- * @brief Funcion para modificar un producto en búsqueda
- * @param producto Nombre del producto a tratar
- * @param ok Booleano que confirmará si se ha conectado a la base de datos
- * @return
- */
 JSON Productos::modificar(bool ok, JSON mensaje)
 {
     if (ok)
     {
-        QSqlQuery query;
+        QSqlQuery query(m_db);
         query.prepare("UPDATE ");// FROM Productos WHERE :nombreTabla == :nombreQuery");
         query.bindValue(":nombreTabla", QString::fromStdString(m_nombreProducto));
         query.bindValue(":nombreQuery", QString::fromStdString(mensaje["product"]));
@@ -58,15 +56,9 @@ JSON Productos::modificar(bool ok, JSON mensaje)
     return mensaje;
 }
 
-/**
- * @brief Funcion para cancelar la búsqueda de un producto
- * @param producto Nombre del producto a tratar
- * @param ok Booleano que confirmará si se ha conectado a la base de datos
- * @param mensaje Es el mensaje enviado desde el cliente para interactuar con él
- */
-///El borrado seria un boton que diga eliminar busquedas, despues se abriria una
-///tabla mostrando los productos en busqueda de ese usuario, y este deberia seleccionar un
-/// elemento de la lista para despues borrarlo.
+//El borrado seria un boton que diga eliminar busquedas, despues se abriria una
+//tabla mostrando los productos en busqueda de ese usuario, y este deberia seleccionar un
+// elemento de la lista para despues borrarlo.
 JSON Productos::cancelar(bool ok, JSON mensaje)
 {
     JSON mensajeDevuelto;
@@ -75,27 +67,30 @@ JSON Productos::cancelar(bool ok, JSON mensaje)
         QSqlQuery query(m_db);
         query.prepare("DELETE FROM productos WHERE nombre_producto = :nombreQuery");
         query.bindValue(":nombreQuery", QString::fromStdString(mensaje["product"]));
-        mensajeDevuelto["salida"] = query.exec();
+        query.exec();
         qDebug() << QObject::tr("Cancelar ") << query.lastError().text();
-
+        if(m_db.databaseName() == "test_sockets")
+        {
+            qDebug() << "Si devuelve false, se ha borrado con éxito porque no encuentra el dato";
+            QSqlQuery testQuery(m_db);
+            testQuery.prepare("SELECT id_producto, nombre_producto, recurso FROM productos WHERE nombre_producto = :nombreproducto");
+            testQuery.bindValue(":nombreproducto", QString::fromStdString(mensaje["product"]));
+            testQuery.exec();
+            mensajeDevuelto["salida"] = testQuery.next();
+            if( testQuery.next() == false) qDebug() << "Borrado con éxito";
+            else qDebug() << "Sigue en la bd";
+        }
         mensajeDevuelto["action"] = "delete";
         mensajeDevuelto["errorType"] = query.lastError().text().toStdString();
 
-            /// No mostrar en el cliente todos los elementos
-            /// Tengo que hacer que el registro de usuarios tenga un registro de sus propios productos
-            /// buscados para que cada uno vea solo sus productos
+            // No mostrar en el cliente todos los elementos
+            // Tengo que hacer que el registro de usuarios tenga un registro de sus propios productos
+            // buscados para que cada uno vea solo sus productos
     } else mensajeDevuelto["salida"] = false; mensajeDevuelto["errorType"] = "No estas conectado a la bbdd";
     return mensajeDevuelto;
 }
 
-/**
- * @brief Funcion para comprobar el estado de un producto
- * @param producto Nombre del producto a tratar
- * @param ok Booleano que confirmará si se ha conectado a la base de datos
- * @param mensaje Es el mensaje enviado desde el cliente para interactuar con él
- * @return
- */
-JSON Productos::revisar(bool ok, JSON mensaje) ///Aqui estarian las comprobaciones del estado del producto
+JSON Productos::revisar(bool ok, JSON mensaje) //Aqui estarian las comprobaciones del estado del producto
 {
     JSON mensajeDevuelto;
     if (ok)
@@ -104,9 +99,16 @@ JSON Productos::revisar(bool ok, JSON mensaje) ///Aqui estarian las comprobacion
         query.prepare("SELECT id_producto, nombre_producto, estado_producto, tiempo_transcurrido, recurso FROM productos WHERE nombre_producto = :nombreproducto");
         //query.bindValue(":nombreTabla", QString::fromStdString(m_nombreProducto.c_str()));
         query.bindValue(":nombreproducto", QString::fromStdString(mensaje["product"]));
-
-        mensajeDevuelto["salida"] = query.exec();
-        //qDebug() <<
+        query.exec();
+        if(m_db.databaseName() == "test_sockets")
+        {
+            qDebug() << QString::fromStdString(mensaje["product"]);
+            qDebug() << query.next();
+            if(query.value("nombre_producto") == QString::fromStdString(mensaje["product"]))
+            {
+                mensajeDevuelto["salida"] = true;
+            }
+        }
 
         while (query.next()) {
                 QString nombre = query.value("nombre_producto").toString();
@@ -125,15 +127,20 @@ JSON Productos::revisar(bool ok, JSON mensaje) ///Aqui estarian las comprobacion
         qDebug() << QObject::tr("Select Error:  ") << query.lastError().text();
 
     }
-    else mensajeDevuelto["errorType"] = "No se han podido encontrar resultados."; mensajeDevuelto["salida"] = false;
+    else
+    {
+        mensajeDevuelto["errorType"] = "No se han podido encontrar resultados.";
+        mensajeDevuelto["salida"] = false;
+    }
 
     return mensajeDevuelto;
 }
 
-Productos::Productos(QSqlDatabase db)
+Productos::Productos(QSqlDatabase &db)
 {
+    m_db = db;
 
-    if (!QSqlDatabase::contains( "MyDb"))
+    /*if (!QSqlDatabase::contains( "MyDb"))
     {
         m_db = QSqlDatabase::addDatabase("QPSQL", "MyDb");
     }
@@ -144,56 +151,6 @@ Productos::Productos(QSqlDatabase db)
     m_db.setHostName("localhost");
     m_db.setPort(5432);
     m_db.setUserName("postgres");
-    m_db.setPassword("");
+    m_db.setPassword("");*/
 
-    /*db.database();
-    m_db.setDatabaseName(db.databaseName());
-    bool ok = m_db.open();*/
-    /*db.close();
-    db.setDatabaseName("template1");
-    bool ok = db.open();
-    if (ok)
-    {
-        //qDebug() << "Borrando...";
-        QSqlQuery q0("DROP DATABASE IF EXISTS test_sockets", db);
-        if (q0.lastError().type() == QSqlError::NoError)
-        {
-            //qDebug() << "Creando...";
-            QSqlQuery q1("CREATE DATABASE test_sockets", db);
-            if (q1.lastError().type() == QSqlError::NoError)
-            {
-                db.close();
-                db.setDatabaseName("test_sockets");
-                db.open();
-
-                /// Crea estructura en la base de datos
-                QString sql {"CREATE TABLE productos ( \
-                    id_producto     SERIAL, \
-                    nombre_producto    varchar(40), \
-                    estado_producto    varchar(20), \
-                    tiempo_transcurrido varchar(20),\
-                    recurso            varchar(30), \
-                    PRIMARY KEY(id_producto) \
-                )"};
-                //qDebug() << "Iniciando...";
-                QSqlQuery q2(sql, db);
-                if (q2.lastError().type() == QSqlError::NoError)
-                {
-                    qDebug() << "Todo funcionando!!!!!!!!!!!!!";
-                    m_db = db;
-                } // end if
-            }
-            else
-            {
-                qDebug() << "BB:" << db.lastError().text();
-            } // end if
-
-        }
-        else
-        {
-            qDebug() << "AA:" << db.lastError().text();
-        } // end if
-
-    } // end if
-    //qDebug() << "Base iniciada";*/
 }

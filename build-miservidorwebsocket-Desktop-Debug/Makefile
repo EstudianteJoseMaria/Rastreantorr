@@ -52,10 +52,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../main.cpp \
 		../productos.cpp \
-		../usuarios.cpp 
+		../usuarios.cpp \
+		../bbdd.cpp 
 OBJECTS       = main.o \
 		productos.o \
-		usuarios.o
+		usuarios.o \
+		bbdd.o
 DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/common/unix.conf \
 		/usr/lib64/qt5/mkspecs/common/linux.conf \
@@ -235,9 +237,11 @@ DIST          = /usr/lib64/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib64/qt5/mkspecs/features/lex.prf \
 		../../miservidorwebsocket.pro ../json.hpp \
 		../productos.h \
-		../usuarios.h ../main.cpp \
+		../usuarios.h \
+		../bbdd.h ../main.cpp \
 		../productos.cpp \
-		../usuarios.cpp
+		../usuarios.cpp \
+		../bbdd.cpp
 QMAKE_TARGET  = miservidorwebsocket
 DESTDIR       = 
 TARGET        = miservidorwebsocket
@@ -629,8 +633,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib64/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../json.hpp ../productos.h ../usuarios.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../main.cpp ../productos.cpp ../usuarios.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../json.hpp ../productos.h ../usuarios.h ../bbdd.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../main.cpp ../productos.cpp ../usuarios.cpp ../bbdd.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents myapp_es_ES.ts myapp_en_US.ts $(DISTDIR)/
 
 
@@ -702,7 +706,8 @@ main.o: ../main.cpp ../websocket/include/ixwebsocket/IXWebSocketServer.h \
 		../websocket/include/ixwebsocket/IXWebSocketPerMessageDeflate.h \
 		../usuarios.h \
 		../json.hpp \
-		../productos.h
+		../productos.h \
+		../bbdd.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../main.cpp
 
 productos.o: ../productos.cpp ../productos.h \
@@ -712,6 +717,9 @@ productos.o: ../productos.cpp ../productos.h \
 usuarios.o: ../usuarios.cpp ../usuarios.h \
 		../json.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o usuarios.o ../usuarios.cpp
+
+bbdd.o: ../bbdd.cpp ../bbdd.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bbdd.o ../bbdd.cpp
 
 ####### Install
 
