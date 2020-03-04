@@ -33,6 +33,62 @@ bool exists(const JSON& json, const std::string& key){
     return json.find(key) != json.end();
 }
 
+std::string mensajeRecibido(JSON js, BBDD &db, bool conectado)
+{
+
+    //Text format
+    qDebug() << QObject::tr("Received message: ");
+    std::cout << js << std::endl;
+    //RESPUESTA
+    usuarios usuario(db.m_db);
+    Productos producto(db.m_db);
+
+    if (js["action"] == "login")
+    {
+        JSON mensaje = usuario.revisar(conectado, js);
+        qDebug() << usuario.id;
+        return mensaje.dump();
+    }
+    else if (js["action"] == "register")
+    {
+        JSON mensaje = usuario.insertar(conectado, js);
+        if(mensaje != "")
+        {
+            return mensaje.dump();
+        }
+    }
+    else if (js["action"] == "estado")       //Comprobar producto
+    {
+        JSON mensaje = {
+            {"idUser", js["id"]},
+            {"product", js["name"]},
+            {"web", js["web"]},
+        };
+        mensaje = producto.revisar(conectado, mensaje);
+
+        return mensaje.dump();
+    }
+    else if (js["action"] == "agregar"){     //Agregar producto
+        JSON mensaje = {
+            {"product", js["name"]},
+        };
+        mensaje = producto.insertar(conectado, mensaje);
+
+        return mensaje.dump();
+    }
+
+    else if (js["action"] == "cancelar")
+    {
+        JSON mensaje = {
+            {"idUser", js["id"]},
+            {"product", js["name"]},
+        };
+        mensaje = producto.cancelar(conectado, mensaje);
+
+        return mensaje.dump();
+    }
+}
+
 /**
  * @brief main Función principal del programa donde se gestiona el comportamiento del servidor
  * @param argc
@@ -47,7 +103,7 @@ int main(int argc, char *argv[] )
     a.installTranslator(&myappTranslator);
 
     BBDD db("../config.prop");
-    //QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL");
+
     bool conectado {false};
     usuarios usu(db.m_db);   //Crear el usuario que se conecta
 
@@ -81,86 +137,23 @@ int main(int argc, char *argv[] )
 
                         conectado = db.open();
 
-                        qDebug() << conectado;
+                        if (conectado) qDebug() << "Base de datos abierta";
+                        else qDebug() << "No se ha podido conectar";
                     }
                     else if (msg->type == ix::WebSocketMessageType::Close)
                     {
                         qDebug() << QObject::tr("Bye bye connection");
                         if (conectado){
                             db.close();
-                            qDebug() << QObject::tr("BBDD cerrada");
+                            qDebug() << QObject::tr("BD cerrada");
                         }
                     }
                     else if (msg->type == ix::WebSocketMessageType::Message)
                     {
-                        int idServer = 0;
                         auto js = JSON::parse(msg->str);
-                        if (!msg->binary)
-                        {
-                            //Text format
-                            qDebug() << QObject::tr("Received message: ");
-                            std::cout << js << std::endl;
-                            //RESPUESTA
-                            usuarios usuario(db.m_db);
-                            Productos producto(db.m_db);
 
-                            if (js["action"] == "login")
-                            {
-                                JSON mensaje = usuario.revisar(conectado, js);
-                                std::string mensajeEnviar = mensaje.dump();
-                                webSocket->send(mensajeEnviar);
-                                qDebug() << usuario.id;
-                            }
-                            else if (js["action"] == "register")
-                            {
-                                JSON mensaje = usuario.insertar(conectado, js);
-                                if(mensaje != "")
-                                {
-                                    std::string mensajeEnviar = mensaje.dump();
-                                    webSocket->send(mensajeEnviar);
-                                }
-                            }
-                            else if (js["action"] == "estado")       //Comprobar producto
-                            {
-                                JSON mensaje = {
-                                    {"idServer", idServer++},
-                                    {"idUser", js["id"]},
-                                    {"product", js["name"]},
-                                    {"web", js["web"]},
-                                };
-                                mensaje = producto.revisar(conectado, mensaje);
-
-                                std::string mensajeEnviar = mensaje.dump();
-                                webSocket->send(mensajeEnviar);
-                            }
-                            else if (js["action"] == "agregar"){     //Agregar producto
-                                JSON mensaje = {
-                                    {"product", js["name"]},
-                                };
-                                mensaje = producto.insertar(conectado, mensaje);
-
-                                std::string mensajeEnviar = mensaje.dump();
-                                webSocket->send(mensajeEnviar);
-                            }
-
-                            else if (js["action"] == "cancelar")
-                            {
-                                JSON mensaje = {
-                                    {"idServer", idServer++},
-                                    {"idUser", js["id"]},
-                                    {"product", js["name"]},
-                                };
-                                mensaje = producto.cancelar(conectado, mensaje);
-
-                                std::string mensajeEnviar = mensaje.dump();
-                                webSocket->send(mensajeEnviar);
-                            }
-
-                        }
-
-                        //webSocket->send(msg->str, msg->binary);
-                        //auto receivedObject = js.get<std::int32_t>();
-                        //std::cout << receivedObject << std::endl;
+                        std::string mensajeEnviar = mensajeRecibido(js, db, conectado);
+                        webSocket->send(mensajeEnviar);
                     }
                 }
             );

@@ -19,11 +19,10 @@ JSON usuarios::insertar(bool ok, JSON mensaje)
     {
         JSON mensajeEnviar;
         QSqlQuery query(m_db);
-        query.prepare("INSERT INTO public.usuarios (nombre_usuario, contrasena, correo) VALUES (:nombre_usuario, :contrasena, :correo)"); //crypt(:pass, gen_salt('bf'))
-        //PGP_SYM_ENCRYPT('1234','AES_KEY')
-        query.bindValue(":nombre_usuario", QString::fromStdString(mensaje["usuario"]));//m_nombre
-        query.bindValue(":contrasena", QString::fromStdString(mensaje["contra"]));//m_contra
-        query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));//m_email
+        query.prepare("INSERT INTO public.usuarios (nombre_usuario, contrasena, correo) VALUES (:nombre_usuario, :contrasena, :correo)");  //PGP_SYM_ENCRYPT('1234','AES_KEY')
+        query.bindValue(":nombre_usuario", QString::fromStdString(mensaje["usuario"]));
+        query.bindValue(":contrasena", QString::fromStdString(mensaje["contra"]));
+        query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
         query.exec();
         qDebug() << m_db.hostName();
         QString error = query.lastError().text();
@@ -51,14 +50,15 @@ JSON usuarios::insertar(bool ok, JSON mensaje)
     }
 }
 
-JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string password
+JSON usuarios::revisar(bool ok, JSON mensaje)
 {
     JSON mensajeDevuelto;
     if (ok)
     {
+        mensajeDevuelto["action"] = "login";
         bool login = false;
         QSqlQuery query(m_db);
-        query.prepare("SELECT correo, contrasena FROM public.usuarios where correo = :correo"); //(contrasena = crypt(:contrasena, contrasena))
+        query.prepare("SELECT correo, contrasena FROM public.usuarios where correo = :correo");
         query.bindValue(":correo", QString::fromStdString(mensaje["correo"]));
         query.exec();
 
@@ -82,24 +82,17 @@ JSON usuarios::revisar(bool ok, JSON mensaje) //std::string email, std::string p
             query.bindValue(":contra", QString::fromStdString(mensaje["contrasena"]));
             query.exec();
 
-            //QSqlRecord rec = query.record();
             while (query.next())
             {
-                mensajeDevuelto["action"] = "id";
-                /*QString nombre = query.value("nombre_usuario").toString();
-                QString correo = query.value("correo").toString();
-                QString contra = query.value("contrasena").toString();
-                usuarios user(nombre, correo, contra);*/
+                mensajeDevuelto["login"] = true;
 
                 this->id = query.value("id_usuario").toInt();
                 mensajeDevuelto["nombre_usuario"] = query.value("nombre_usuario").toString().toStdString();
-
             }
         }
         else
         {
-
-            mensajeDevuelto = "";
+            mensajeDevuelto["error"] = "No has introducido los datos correctamente";
             return mensajeDevuelto;
         } // end if
     }
