@@ -44,7 +44,7 @@
     
   **Usuarios de prueba**
   
-    Se puede entrar en el programa con un usuario de prueba: usuario: prueba, contraseña: prueba.
+    Se puede entrar en el programa con un usuario de prueba: usuario: usuario, contraseña: usuario.
     
  **LICENCIAS**
  
