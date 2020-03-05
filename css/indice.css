@@ -19,6 +19,12 @@
      padding: 0px 9px 0px 9px;
  }
 
+ #divuser{
+    float:right;
+    margin: 10px 40px 0px 0px;
+    position:relative;
+ }
+ 
  #usuarioreg{
     text-align: center;
     margin: 50px 0px 0px 15%;
