@@ -4,6 +4,10 @@
  
  RASTREANTOR
  
+ **URL GitHub**
+ 
+ 
+ 
  **Presentación del programa**
     
     El programa está diseñado para poder hacer un control de productos que introduces en una base de datos y poder
@@ -25,35 +29,37 @@
      si el producto que buscan ha subido de precio, si el usuario ha cancelado su búsqueda, etc...
      
      
- **Problemas que hayan surgido: **
+ **Problemas que han surgido: **
     
     - Han surgido bastantes problemas durante la creación dle programa, ya que al principio, no entendía bien el
     funcionamiento de los mensajes Json y su estructura. 
     - En el momento de crear los certificados digitales del cliente salían problemas constantes y tardé demasiado en
     corregirlos todos. 
     
- **Opciones que hubieramos implementado: **
+ **Mejoras posibles: **
     
-    Me hubiera gustado preparar los crawlers para que rastrearan la página web que pusiera el usuario, y poder automatizarlo.
-    También que los clientes pudieran interactuar con los productos que estaban en busqueda.
+    - Me hubiera gustado preparar los crawlers para que rastrearan la página web que pusiera el usuario, y poder automatizarlo.
+    - También que los clientes pudieran interactuar con los productos que estaban en busqueda.
     
     
  **Base de datos**
  
-    El servidor usa una base de datos PostgreSQl llamada sockets. 
+    - El servidor usa una base de datos PostgreSQl llamada sockets. 
     
   **Usuarios de prueba**
-  
-    Se puede entrar en el programa con un usuario de prueba: usuario: usuario, contraseña: usuario.
+
+    - Se puede entrar en el programa con un usuario de prueba: usuario: usuario, contraseña: usuario.
     
  **LICENCIAS**
  
-    
-    Creative Commons (CC - NC) 2020
-    Esta obra está bajo una Licencia Creative Commons No-Comercial. 
-    La comercialización de cualquier software  o derivado de éste puede ser castigado y se aplicarán las leyes penales
-    del país de origen. Qualquiera puede acceder, ver y modificar el contenido del producto, pero en ningún caso puede
-    distribuirlo ni comercializarlo. 
+    Licencia MIT
+    Copyright 2020 José María Puigserver
+
+    Por la presente se concede permiso, libre de cargos, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados (el "Software"), a utilizar el Software sin restricción, incluyendo sin limitación los derechos a usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar, y/o vender copias del Software, y a permitir a las personas a las que se les proporcione el Software a hacer lo mismo, sujeto a las siguientes condiciones:
+
+    El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del Software.
+    EL SOFTWARE SE PROPORCIONA "COMO ESTÁ", SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUYENDO PERO NO LIMITADO A GARANTÍAS DE COMERCIALIZACIÓN, IDONEIDAD PARA UN PROPÓSITO PARTICULAR E INCUMPLIMIENTO. EN NINGÚN CASO LOS AUTORES O PROPIETARIOS DE LOS DERECHOS DE AUTOR SERÁN RESPONSABLES DE NINGUNA RECLAMACIÓN, DAÑOS U OTRAS RESPONSABILIDADES, YA SEA EN UNA ACCIÓN DE CONTRATO, AGRAVIO O CUALQUIER OTRO MOTIVO, DERIVADAS DE, FUERA DE O EN CONEXIÓN CON EL SOFTWARE O SU USO U OTRO TIPO DE ACCIONES EN EL SOFTWARE.
+    Si se necesita comercializar o modificar el contenido del producto, se puede contactar con el autor: josemariapuigserver@estudiante.edib.es.
     
     José María Puigserver Sastre
     02/2020

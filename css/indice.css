@@ -23,6 +23,7 @@
     float:right;
     margin: 10px 40px 0px 0px;
     position:relative;
+    display:none;
  }
  
  #usuarioreg{
@@ -63,8 +64,9 @@
  }
  
  #busqueda{
-    top:35%;
-    display:none;
+    margin-top:-10%;
+    margin-left: 10%;
+    display: none;
  }
  
  #estiloBusqueda{

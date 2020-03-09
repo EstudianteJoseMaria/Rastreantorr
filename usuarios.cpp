@@ -88,6 +88,7 @@ JSON usuarios::revisar(bool ok, JSON mensaje)
 
                 this->id = query.value("id_usuario").toInt();
                 mensajeDevuelto["nombre_usuario"] = query.value("nombre_usuario").toString().toStdString();
+                mensajeDevuelto["id_usuario"] = query.value("id_usuario").toString().toStdString();
             }
         }
         else

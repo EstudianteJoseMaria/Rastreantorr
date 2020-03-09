@@ -59,33 +59,27 @@ std::string mensajeRecibido(JSON js, BBDD &db, bool conectado)
     }
     else if (js["action"] == "estado")       //Comprobar producto
     {
-        JSON mensaje = {
-            {"idUser", js["id"]},
-            {"product", js["name"]},
-            {"web", js["web"]},
-        };
-        mensaje = producto.revisar(conectado, mensaje);
-
-        return mensaje.dump();
+        JSON mensaje = producto.revisar(conectado, js);
+        if(mensaje != "")
+        {
+            return mensaje.dump();
+        }
     }
     else if (js["action"] == "agregar"){     //Agregar producto
-        JSON mensaje = {
-            {"product", js["name"]},
-        };
-        mensaje = producto.insertar(conectado, mensaje);
-
-        return mensaje.dump();
+        JSON mensaje = producto.insertar(conectado, js);
+        if(mensaje != "")
+        {
+            return mensaje.dump();
+        }
     }
 
     else if (js["action"] == "cancelar")
     {
-        JSON mensaje = {
-            {"idUser", js["id"]},
-            {"product", js["name"]},
-        };
-        mensaje = producto.cancelar(conectado, mensaje);
-
-        return mensaje.dump();
+        JSON mensaje = producto.cancelar(conectado, js);
+        if(mensaje != "")
+        {
+            return mensaje.dump();
+        }
     }
 }
 
@@ -102,7 +96,7 @@ int main(int argc, char *argv[] )
     myappTranslator.load("myapp_es_ES", "../");
     a.installTranslator(&myappTranslator);
 
-    BBDD db("../config.prop");
+    BBDD db("../database.conf");
 
     bool conectado {false};
     usuarios usu(db.m_db);   //Crear el usuario que se conecta

@@ -80,6 +80,7 @@ bool Db::start()
                     estado_producto    varchar(20), \
                     tiempo_transcurrido varchar(20),\
                     recurso            varchar(30), \
+                    id_usuario         integer, \
                     PRIMARY KEY(id_producto) \
                 )"};
                 qDebug() << "Iniciando...";
@@ -120,7 +121,9 @@ TEST_CASE("base datos #0")
 {
     JSON mensaje;
     mensaje["product"] = "Patata";
+    mensaje["productId"] = "0";
     mensaje["web"] = "amazon";
+    mensaje["iduser"] = "1";
     Db db;
 
     if (db.start()) //p.m_db.isOpen())
@@ -134,7 +137,7 @@ TEST_CASE("base datos #0")
         SUBCASE("Cancelar #0")
         {
             CHECK( p.insertar(true, mensaje)["salida"] == true );
-            CHECK( p.cancelar(true, mensaje)["salida"] == false );
+            CHECK( p.cancelar(true, mensaje)["salida"] == true );
         }
         SUBCASE("Select #0")
         {
@@ -160,7 +163,9 @@ TEST_CASE("producto #1")
 
     JSON mensaje;
     mensaje["product"] = "Patata";
+    mensaje["productId"] = "0";
     mensaje["web"] = "amazon";
+    mensaje["iduser"] = "1";
     Db db;
 
     if (true)
@@ -174,7 +179,7 @@ TEST_CASE("producto #1")
         }
         SUBCASE("Cancelar #1")
         {
-            CHECK( p.cancelar(true, mensaje)["salida"] == false );
+            CHECK( p.cancelar(true, mensaje)["salida"] == true );
         }
     }
     else

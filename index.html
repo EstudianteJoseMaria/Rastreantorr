@@ -10,6 +10,7 @@
 <script>
 
 var socket = new WebSocket("ws://localhost:9990");
+var iduser;
 
 function mostrarIni()   //Funcion para mostrar la pagina de inicio
 {
@@ -27,6 +28,22 @@ function botonEntrar()  //Funcion de login
 {
     var json = {action: "login", correo: document.getElementById("correo").value, contrasena: document.getElementById("contra").value};
     socket.send(JSON.stringify(json));
+}
+
+function cerrarSesion()
+{
+    document.getElementById("divlogin").style.display="block";
+    document.getElementById("divreg").style.display="none";
+    document.getElementById("divIni").style.display="none";
+    if(document.getElementById("estiloBusqueda"))
+    {
+        document.getElementById("estiloBusqueda").style.display="none"
+    }
+    document.getElementById("retroceso").style.display="none";
+    document.getElementById("divuser").style.display="none";
+    document.getElementById("correo").value = "";
+    document.getElementById("contra").value = "";
+    document.getElementById("user").innerHTML = "";
 }
 
 function botonRegistro()    //Funcion para registrarse
@@ -51,39 +68,44 @@ function volverInicio()     //Funcion para volver al menu de opciones de product
     }
 }
 
-function cancelarProducto() //Funcion para cancelar una busqueda
+function cancelarProducto(id) //Funcion para cancelar una busqueda
 {
-    var json = {id: "1", action: "cancelar", name: document.getElementById("cancelar").value};
+    var json = {iduser: iduser, action: "cancelar", productId: id};
     socket.send(JSON.stringify(json));
+    mostrarBusquedas();
 }
 
-function revisarProducto() //Funcion para pedir si existe el producto
+function mostrarBusquedas() //Funcion para pedir si existe el producto
 {
-    var json = {id: "2", action: "estado", name:  document.getElementById("comprobar").value};
+    var json = {iduser: iduser, action: "estado", product:  document.getElementById("nombre").value};
     socket.send(JSON.stringify(json));
-    document.getElementById("divIni").style.display="none";
+    //document.getElementById("divIni").style.display="none";
     document.getElementById("busqueda").style.display="block";
-    document.getElementById("retroceso").style.display="block";
+    while (document.getElementById("busqueda").firstChild) {
+      document.getElementById("busqueda").removeChild(document.getElementById("busqueda").firstChild);
+    }
+    //document.getElementById("retroceso").style.display="block";
 }
 
 function agregarProducto()      //Funcion para agregar un producto a la lista de productos
 {
-    var json = {id: "3", action: "agregar", name: document.getElementById("agregar").value, web: "www.amazon.es"}; //modificar la web
+    var json = {iduser: iduser, action: "agregar", product: document.getElementById("nombre").value, web: "www.amazon.es"}; //modificar la web
     socket.send(JSON.stringify(json));
+    mostrarBusquedas();
 }
 
-function confirmacionDelete()   //Funcion para confirmar un borrado de producto
+function confirmacionDelete(id)   //Funcion para confirmar un borrado de producto
 {
     var ok = confirm("Estas seguro de que quieres borrar el elemento?");
     if (ok == true)
     {
-        cancelarProducto();
+        cancelarProducto(id);
         alert("Se ha borrado con éxito");
     } //end if
 }
 
 socket.onopen = function(e) {
-  alert("[open] Connection established");
+  //alert("[open] Connection established");
   //alert("Sending to server");
   //socket.send("My name is John");
 };
@@ -92,12 +114,7 @@ socket.onmessage = function(event) {
   //alert(`[message] Data received from server: ${event.data}`);
   console.log(event.data);
   var mensaje = JSON.parse(event.data);
-  if (mensaje.action == "delete")           //Segn el JSON recibido, ejecuta diferentes opciones
-  {
-    alert("Hay mas de una fila por borrar");
-    confirm("Seguro que quieres borrar?");
-  }
-  else if (mensaje.action == "insert")
+  if (mensaje.action == "insert")
   {
     alert("Se han introducido los datos correctamente!!!");
   }
@@ -111,7 +128,10 @@ socket.onmessage = function(event) {
       {
           document.getElementById("divlogin").style.display="none";
           document.getElementById("divIni").style.display="block";
+          document.getElementById("divuser").style.display="block";
           document.getElementById("user").appendChild(document.createTextNode(mensaje.nombre_usuario));
+          iduser = mensaje.id_usuario;
+          mostrarBusquedas();
       }
   }
   else if (mensaje.action == "update")
@@ -120,46 +140,59 @@ socket.onmessage = function(event) {
   }
   else if (mensaje.action == "select")
   {
-  for(var i = 0; i < Object.keys(mensaje.busqueda).length; i++)
-  {
-    console.log(mensaje.busqueda)
-  }
-    alert("Ahora mismo hay estos procesos en búsqueda: ");
-    var espaciado = document.createTextNode("           ");
-    for(var i = 0; i < Object.keys(mensaje.busqueda.nombre).length; i++) {       //Cada elemento se coloca en un div distinto
+      //alert("Ahora mismo hay estos procesos en búsqueda: ");
+    if(mensaje.busqueda)
+    {
+      for(var i = 0; i < Object.keys(mensaje.busqueda.nombre).length; i++) {       //Cada elemento se coloca en un div distinto
 
-        var div = document.createElement("div");
-        div.id="estiloBusqueda";
-        var nombres = document.createElement("nombre");
-        nombres.style.display= "block";
-        var nombre = document.createTextNode("Nombre: " + mensaje.busqueda.nombre[i]);
-        nombres.appendChild(nombre);
+            var id = document.createElement("id");
+            id.style.display = "none";
+            var idProducto = document.createTextNode(mensaje.busqueda.id[i]);
+            id.appendChild(idProducto);
 
-        var estados = document.createElement("estado");
-        estados.style.display= "block";
-        var estado = document.createTextNode("Estado: " + mensaje.busqueda.estado[i]);
-        estados.appendChild(estado);
+            var div = document.createElement("div");
+            div.id="estiloBusqueda";
+            var nombres = document.createElement("nombre");
+            nombres.style.display= "block";
+            var nombre = document.createTextNode("Nombre: " + mensaje.busqueda.nombre[i]);
+            nombres.appendChild(nombre);
 
-        var tiempos = document.createElement("tiempo");
-        tiempos.style.display= "block";
-        var tiempo = document.createTextNode("Tiempo transcurrido: " + mensaje.busqueda.tiempo[i]);
-        tiempos.appendChild(tiempo);
+            var estados = document.createElement("estado");
+            estados.style.display= "block";
+            var estado = document.createTextNode("Estado: " + mensaje.busqueda.estado[i]);
+            estados.appendChild(estado);
 
-        var direcciones = document.createElement("direccion");
-        direcciones.style.display= "block";
-        var direccion = document.createTextNode("Dirección de búsqueda: " + mensaje.busqueda.recurso[i]);
-        direcciones.appendChild(direccion);
+            var tiempos = document.createElement("tiempo");
+            tiempos.style.display= "block";
+            var tiempo = document.createTextNode("Tiempo transcurrido: " + mensaje.busqueda.tiempo[i]);
+            tiempos.appendChild(tiempo);
 
-        console.log(document.getElementById("busqueda").appendChild(div));
+            var direcciones = document.createElement("direccion");
+            direcciones.style.display= "block";
+            var direccion = document.createTextNode("Dirección de búsqueda: " + mensaje.busqueda.recurso[i]);
+            direcciones.appendChild(direccion);
 
-        div.appendChild(nombres);
-        div.appendChild(estados);
-        div.appendChild(tiempos);
-        div.appendChild(direcciones);
+            console.log(document.getElementById("busqueda").appendChild(div));
 
-        document.getElementById("busqueda").appendChild(div);
-    }
+            var boton = document.createElement("input");
+            boton.type = "button";
+            boton.value = "X";
+            boton.style.backgroundColor = "red";
+            boton.position = "relative";
+            boton.style.float ="right";
+            boton.style.marginRight = "50px";
+            boton.onclick = function() {confirmacionDelete(this.parentElement.childNodes[5].textContent)};
+            div.appendChild(boton);
 
+            div.appendChild(nombres);
+            div.appendChild(estados);
+            div.appendChild(tiempos);
+            div.appendChild(direcciones);
+            div.appendChild(id);
+            document.getElementById("busqueda").appendChild(div);
+
+        }
+     }
   };
 }
 
@@ -169,7 +202,7 @@ socket.onclose = function(event) {
   } else {
     // e.g. server process killed or network down
     // event.code is usually 1006 in this case
-    // alert('[close] Connection died');
+    alert('[close] Connection died');
   }
 };
 
@@ -188,7 +221,7 @@ socket.onerror = function(error) {
         <div class="ContentForm">
             <!--<form action="" method="get" name="FormEntrar"> -->
               <div style="margin: 40px 0px 0px -28%">
-                <input type="email" class="elemIni" id="correo" name="correo" placeholder="example@example.com" size="30" required>
+                <input type="text" class="elemIni" id="correo" name="correo" placeholder="example@example.com" size="30" required>
               </div>
               <div style="margin: 10px 0px 0px -28%">
                 <input type="password" class="elemIni" id="contra" name="contra" placeholder="******" size="30" required>
@@ -214,26 +247,21 @@ socket.onerror = function(error) {
         </div>
     </div>
 <!--Fin registro-->
-<input type=image src="flecha.png" id="retroceso" width="50" height="50" onclick="volverInicio()"/>
-<div id="divuser"><b>Usuario: </b>
-    <user id="user"></user><br>
-</div>
-    <div id="divIni"> <!-- Pagina del cliente -->
+    <input type=image src="flecha.png" id="retroceso" width="50" height="50" onclick="volverInicio()"/>
+<!--Usuario-->
+    <div id="divuser"><b>Usuario: </b>
+        <user id="user"></user><br>
+        <input type="button" value="Cerrar sesión" onclick="cerrarSesion()">
+    </div>
+<!-- Pagina del cliente -->
+    <div id="divIni">
     <h1>Funciones disponibles:</h1>
         <div class="divsConsulta">
-            1. Introduce el nombre del producto que quieras empezar a buscar: <br style="margin-bottom:10px">
-            <input type="textfield" id="agregar" placeholder="Introduce el nombre del producto"/>
-            <input type="button" value="Nuevo producto" onclick="agregarProducto()"/>
-        </div>
-        <div class="divsConsulta">
-            2. Introduce el producto a cancelar: <br style="margin-bottom:30px">
-            <input type="textfield" id="cancelar" placeholder="Introduce el nombre del producto"/>
-            <input type="button" value="Cancelar producto" onclick="confirmacionDelete()"/>
-        </div>
-        <div class="divsConsulta">
-            3. Introduce el nombre del producto que quieres revisar: <br style="margin-bottom:30px">
-            <input type="textfield" id="comprobar" placeholder="Introduce el nombre del producto"/>
-            <input type="button" value="Comprobar producto" onclick="revisarProducto()"/>
+            Introduce el nombre del producto: <br style="margin-bottom:10px">
+            <input type="textfield" id="nombre" style="margin-top:23px" placeholder="Introduce el nombre del producto"/>
+            <input type="button" value="Nuevo producto" style="margin: 23px 0px 0px 15px; width:160px; position:absolute;" onclick="agregarProducto()"/>
+            <!--<input type="button" value="Cancelar producto" style="margin: 40px 0px 0px 15px; width:160px; position:absolute;" onclick="confirmacionDelete()"/>
+            <input type="button" value="Comprobar producto" style="margin: 75px 0px 0px 15px; width:160px; position:absolute;" onclick="revisarProducto()"/>-->
         </div>
     </div>
     <div id="busqueda">

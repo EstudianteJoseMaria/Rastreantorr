@@ -17,13 +17,14 @@ JSON Productos::insertar(bool ok, JSON mensaje)
     if (ok)
     {
         QSqlQuery query(m_db);
-        query.prepare("INSERT INTO productos (nombre_producto, recurso) VALUES (:nombreQuery, :recursoQuery)");
+        query.prepare("INSERT INTO productos (nombre_producto, estado_producto, recurso, id_usuario) VALUES (:nombreQuery, :estado, :recursoQuery, :idusuario)");
 
         query.bindValue(":nombreQuery", QString::fromStdString(mensaje["product"]));
+        query.bindValue(":estado", "Procesando");
         query.bindValue(":recursoQuery", QString::fromStdString(mensaje["web"]));
+        query.bindValue(":idusuario", QString::fromStdString(mensaje["iduser"]));
 
-        query.exec();
-
+        qDebug() << query.exec();
         if(m_db.databaseName() == "test_sockets")
         {
             QSqlQuery testQuery(m_db);
@@ -65,8 +66,8 @@ JSON Productos::cancelar(bool ok, JSON mensaje)
     if (ok)
     {
         QSqlQuery query(m_db);
-        query.prepare("DELETE FROM productos WHERE nombre_producto = :nombreQuery");
-        query.bindValue(":nombreQuery", QString::fromStdString(mensaje["product"]));
+        query.prepare("DELETE FROM productos WHERE id_producto = :nombreQuery");
+        query.bindValue(":nombreQuery", QString::fromStdString(mensaje["productId"]));
         query.exec();
         qDebug() << QObject::tr("Cancelar ") << query.lastError().text();
         if(m_db.databaseName() == "test_sockets")
@@ -86,7 +87,11 @@ JSON Productos::cancelar(bool ok, JSON mensaje)
             // No mostrar en el cliente todos los elementos
             // Tengo que hacer que el registro de usuarios tenga un registro de sus propios productos
             // buscados para que cada uno vea solo sus productos
-    } else mensajeDevuelto["salida"] = false; mensajeDevuelto["errorType"] = "No estas conectado a la bbdd";
+    } else
+    {
+        mensajeDevuelto["salida"] = false;
+        mensajeDevuelto["errorType"] = "No estas conectado a la bbdd";
+    }
     return mensajeDevuelto;
 }
 
@@ -96,9 +101,10 @@ JSON Productos::revisar(bool ok, JSON mensaje) //Aqui estarian las comprobacione
     if (ok)
     {
         QSqlQuery query(m_db);
-        query.prepare("SELECT id_producto, nombre_producto, estado_producto, tiempo_transcurrido, recurso FROM productos WHERE nombre_producto = :nombreproducto");
+        query.prepare("SELECT id_producto, nombre_producto, estado_producto, tiempo_transcurrido, recurso FROM productos WHERE id_usuario = :idusuario");
         //query.bindValue(":nombreTabla", QString::fromStdString(m_nombreProducto.c_str()));
-        query.bindValue(":nombreproducto", QString::fromStdString(mensaje["product"]));
+        //query.bindValue(":nombreproducto", QString::fromStdString(mensaje["product"]));
+        query.bindValue(":idusuario", QString::fromStdString(mensaje["iduser"]));
         query.exec();
         if(m_db.databaseName() == "test_sockets")
         {
@@ -111,11 +117,13 @@ JSON Productos::revisar(bool ok, JSON mensaje) //Aqui estarian las comprobacione
         }
 
         while (query.next()) {
+                QString id = query.value("id_producto").toString();
                 QString nombre = query.value("nombre_producto").toString();
                 QString estado = query.value("estado_producto").toString();
                 QString tiempo = query.value("tiempo_transcurrido").toString();
                 QString recurso = query.value("recurso").toString();
                 qDebug() << nombre << estado << tiempo << recurso;
+                mensajeDevuelto["busqueda"]["id"].push_back(id.toStdString());
                 mensajeDevuelto["busqueda"]["nombre"].push_back(nombre.toStdString());
                 mensajeDevuelto["busqueda"]["estado"].push_back(estado.toStdString());
                 mensajeDevuelto["busqueda"]["tiempo"].push_back(tiempo.toStdString());
